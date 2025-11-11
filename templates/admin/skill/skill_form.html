@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if form.instance.pk %}Ko‘nikmani tahrirlash{% else %}Yangi ko‘nikma{% endif %}</title>
+</head>
+<body>
+
+<h1>{% if form.instance.pk %}Ko‘nikmani tahrirlash{% else %}Yangi ko‘nikma qo‘shish{% endif %}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if form.instance.pk %}Saqlash{% else %}Qo‘shish{% endif %}</button>
+</form>
+
+<p><a href="{% url 'skill_list' %}">⬅ Ro‘yxatga qaytish</a></p>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilni tahrirlash</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'admin/profile/update_profile.css' %}">
+</head>
+<body>
+
+<div class="update-card shadow-lg">
+    <h3 class="text-center mb-4">Profilni tahrirlash</h3>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="text-center mb-3">
+            {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" alt="Profil rasmi" class="profile-img-preview" id="profilePreview">
+            {% else %}
+                <img src="{% static 'img/default_profile.png' %}" alt="Profil rasmi" class="profile-img-preview" id="profilePreview">
+            {% endif %}
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">To‘liq ism</label>
+                {{ form.full_name }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Email</label>
+                {{ form.email }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Telefon raqam</label>
+                {{ form.phone_number }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Mutaxassislik</label>
+                {{ form.specialization }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Manzil</label>
+                {{ form.location }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Profil rasmi</label>
+                {{ form.profile_image }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">GitHub link</label>
+                {{ form.github_link }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">LinkedIn link</label>
+                {{ form.linkedin_link }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Telegram username</label>
+                {{ form.telegram }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Rezyume (PDF, DOCX va h.k.)</label>
+                {{ form.resume_file }}
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">Saqlash</button>
+            <a href="{% url 'profile' %}" class="btn btn-secondary btn-lg">Bekor qilish</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'admin/profile/update_profile.js' %}"></script>
+</body>
+</html>

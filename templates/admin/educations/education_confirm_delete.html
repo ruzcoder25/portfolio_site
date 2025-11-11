@@ -1,0 +1,8 @@
+
+<h3>Ma'lumotni o'chirish</h3>
+<p>Haqiqatan ham "{{ object }}" ni o'chirmoqchimisiz?</p>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Ha, o'chirish</button>
+    <a href="{% url 'education_list' %}" class="btn btn-secondary">Bekor qilish</a>
+</form>

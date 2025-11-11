@@ -1,0 +1,9 @@
+<h2>Tilni o‘chirish</h2>
+
+<p>Rostdan ham <strong>{{ object.name }}</strong> tilini o‘chirmoqchimisiz?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Ha, o‘chirish</button>
+    <a href="{% url 'language_list' %}" class="btn btn-secondary">Yo‘q, bekor qilish</a>
+</form>

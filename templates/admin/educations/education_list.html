@@ -1,0 +1,33 @@
+
+<h3>Ta'lim ma'lumotlari</h3>
+<a href="{% url 'education_add' %}" class="btn btn-success mb-3">Yangi qo'shish</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Universitet</th>
+            <th>Mutaxassislik</th>
+            <th>Daraja</th>
+            <th>Davr</th>
+            <th>Harakatlar</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for edu in educations %}
+        <tr>
+            <td>{{ edu.university }}</td>
+            <td>{{ edu.specialization }}</td>
+            <td>{{ edu.degree }}</td>
+            <td>{{ edu.start_year }} - {{ edu.end_year }}</td>
+            <td>
+                <a href="{% url 'education_edit' edu.pk %}" class="btn btn-primary btn-sm">Tahrirlash</a>
+                <a href="{% url 'education_delete' edu.pk %}" class="btn btn-danger btn-sm">O'chirish</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Ma'lumot topilmadi</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+

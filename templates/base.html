@@ -23,6 +23,10 @@
                     <a href="#skills" class="nav-link">Ko'nikmalar</a>
                     <a href="#experience" class="nav-link">Loyihalar</a>
                     <a href="#contact" class="nav-link">Bog'lanish</a>
+                    {% if user.is_authenticated %}
+                    <!-- Faqat login qilgan foydalanuvchi ko‘radi -->
+                    <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+                    {% endif %}
                 </div>
 
                 <button class="hamburger" id="hamburger">

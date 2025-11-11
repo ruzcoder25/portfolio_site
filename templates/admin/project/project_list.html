@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Loyihalar ro'yxati</title>
+</head>
+<body>
+<h1>Loyihalar ro'yxati</h1>
+
+{% if user.is_authenticated %}
+    <a href="{% url 'project_create' %}">➕ Yangi loyiha qo‘shish</a>
+{% endif %}
+<hr>
+
+{% if projects %}
+    {% for project in projects %}
+        <h3>{{ project.project_name }}</h3>
+        <p>{{ project.description|truncatechars:150 }}</p>
+        <p>Loyiha turi: {{ project.get_project_type_display }}</p>
+        <p>Ish turi: {{ project.get_work_type_display }}</p>
+        <p>Yaratilgan sana: {{ project.created_at|date:"Y-m-d" }}</p>
+
+        {% if user.is_authenticated and project.user == user %}
+            <p>
+                <a href="{% url 'project_detail' project.pk %}">Batafsil</a> |
+                <a href="{% url 'project_update' project.pk %}">Tahrirlash</a> |
+                <a href="{% url 'project_delete' project.pk %}">O‘chirish</a>
+            </p>
+        {% else %}
+            <p><a href="{% url 'project_detail' project.pk %}">Batafsil</a></p>
+        {% endif %}
+
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>Hozircha hech qanday loyiha yo‘q.</p>
+{% endif %}
+
+</body>
+</html>

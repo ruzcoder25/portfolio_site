@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tillar ro'yxati</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .btn { padding: 4px 8px; text-decoration: none; border-radius: 4px; color: white; }
+        .btn-update { background-color: #ffc107; }
+        .btn-delete { background-color: #dc3545; }
+        .btn-add { background-color: #28a745; margin-bottom: 10px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <h2>Tillar ro'yxati</h2>
+
+    {% if request.user.is_staff %}
+    <a href="{% url 'language_add' %}" class="btn btn-add">➕ Yangi til qo'shish</a>
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Til nomi</th>
+                <th>Daraja</th>
+                {% if request.user.is_staff %}
+                <th>Amallar</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for lang in languages %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ lang.name }}</td>
+                <td>{{ lang.get_level_display }}</td>
+                {% if request.user.is_staff %}
+                <td>
+                    <a href="{% url 'language_edit' lang.pk %}" class="btn btn-update">Tahrirlash</a>
+                    <a href="{% url 'language_delete' lang.pk %}" class="btn btn-delete">O‘chirish</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="{% if request.user.is_staff %}4{% else %}3{% endif %}">Hech qanday til qo‘shilmagan.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

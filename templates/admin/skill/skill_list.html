@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Ko‘nikmalar ro'yxati</title>
+</head>
+<body>
+
+<h1>Ko‘nikmalar ro'yxati</h1>
+
+{% if user.is_authenticated %}
+    <a href="{% url 'skill_create' %}">➕ Yangi ko‘nikma qo‘shish</a>
+{% endif %}
+<hr>
+
+{% if skills %}
+    {% for skill in skills %}
+        <h3>{{ skill.name }}</h3>
+        <p>Toifa: {{ skill.get_category_display }}</p>
+        <p>Yaratilgan sana: {{ skill.created_at|date:"Y-m-d" }}</p>
+
+        {% if user.is_authenticated %}
+            <p>
+                <a href="{% url 'skill_detail' skill.pk %}">Batafsil</a> |
+                <a href="{% url 'skill_update' skill.pk %}">Tahrirlash</a> |
+                <a href="{% url 'skill_delete' skill.pk %}">O‘chirish</a>
+            </p>
+        {% else %}
+            <p><a href="{% url 'skill_detail' skill.pk %}">Batafsil</a></p>
+        {% endif %}
+
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>Hozircha hech qanday ko‘nikma yo‘q.</p>
+{% endif %}
+
+</body>
+</html>

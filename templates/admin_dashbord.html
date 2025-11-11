@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Admin Panel</title>
+    <link rel="stylesheet" href="{% static 'admin/dashboard/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <i class="fas fa-user-circle"></i>
+            <span>Admin Panel</span>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="user-info">
+            <div class="avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-details">
+                <h3>{{ user.get_full_name|default:user.username }}</h3>
+                <p>{{ user.email }}</p>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="{% url 'dashboard' %}" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'profile' %}" class="nav-item">
+                <i class="fas fa-user-edit"></i>
+                <span>Profil</span>
+            </a>
+
+            <a href="{% url 'education_list' %}" class="nav-item">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Ta'lim</span>
+            </a>
+
+            <a href="{% url 'language_list' %}" class="nav-item">
+                <i class="fas fa-language"></i>
+                <span>Tillar</span>
+            </a>
+
+            <a href="{% url 'project_list' %}" class="nav-item">
+                <i class="fas fa-project-diagram"></i>
+                <span>Loyihalar</span>
+            </a>
+
+            <a href="{% url 'skill_list' %}" class="nav-item">
+                <i class="fas fa-cogs"></i>
+                <span>Ko'nikmalar</span>
+            </a>
+
+            <div class="nav-divider"></div>
+
+            <a href="{% url 'logout_user' %}" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Chiqish</span>
+            </a>
+
+            <a href="{% url 'home' %}" class="nav-item home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+        </nav>
+        {% endif %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="header-right">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+
+                <div class="theme-toggle">
+                    <button id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="content">
+            {% if user.is_authenticated %}
+            <div class="welcome-section">
+                <h1>Xush kelibsiz, {{ user.get_full_name|default:user.username }}! 👋</h1>
+                <p>Bu sizning shaxsiy admin panelingiz</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon education">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Ta'lim</h3>
+                        <p class="stat-number">{{ education_count|default:0 }}</p>
+                        <a href="{% url 'education_list' %}" class="stat-link">Ko'rish <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon language">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Tillar</h3>
+                        <p class="stat-number">{{ language_count|default:0 }}</p>
+                        <a href="{% url 'language_list' %}" class="stat-link">Ko'rish <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon project">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Loyihalar</h3>
+                        <p class="stat-number">{{ project_count|default:0 }}</p>
+                        <a href="{% url 'project_list' %}" class="stat-link">Ko'rish <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon skill">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Ko'nikmalar</h3>
+                        <p class="stat-number">{{ skill_count|default:0 }}</p>
+                        <a href="{% url 'skill_list' %}" class="stat-link">Ko'rish <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h2><i class="fas fa-bolt"></i> Tez harakatlar</h2>
+                <div class="action-grid">
+                    <a href="{% url 'update_profile' %}" class="action-card">
+                        <i class="fas fa-user-edit"></i>
+                        <h3>Profilni tahrirlash</h3>
+                        <p>Shaxsiy ma'lumotlarni yangilash</p>
+                    </a>
+
+                    <a href="{% url 'education_add' %}" class="action-card">
+                        <i class="fas fa-plus-circle"></i>
+                        <h3>Ta'lim qo'shish</h3>
+                        <p>Yangi ta'lim ma'lumotini kiriting</p>
+                    </a>
+
+                    <a href="{% url 'project_create' %}" class="action-card">
+                        <i class="fas fa-folder-plus"></i>
+                        <h3>Loyiha yaratish</h3>
+                        <p>Yangi loyiha qo'shing</p>
+                    </a>
+
+                    <a href="{% url 'skill_create' %}" class="action-card">
+                        <i class="fas fa-star"></i>
+                        <h3>Ko'nikma qo'shish</h3>
+                        <p>Yangi ko'nikmani kiriting</p>
+                    </a>
+                </div>
+            </div>
+
+            {% else %}
+            <!-- Not Authenticated -->
+            <div class="auth-required">
+                <div class="auth-card">
+                    <i class="fas fa-lock"></i>
+                    <h2>Tizimga kirish talab qilinadi</h2>
+                    <p>Dashboard'ga kirish uchun avval tizimga kiring</p>
+                    <a href="{% url 'login' %}" class="btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Tizimga kirish
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Admin Panel. Barcha huquqlar himoyalangan.</p>
+        </footer>
+    </div>
+
+    <script src="{% static 'admin/dashboard/script.js' %}"></script>
+</body>
+</html>

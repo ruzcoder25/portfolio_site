@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Ko‘nikmani o‘chirish</title>
+</head>
+<body>
+
+<h1>Ko‘nikmani o‘chirish</h1>
+
+<p>Haqiqatan ham "{{ skill.name }}" ko‘nikmasini o‘chirmoqchimisiz?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Ha, o‘chirilsin</button>
+    <a href="{% url 'skill_list' %}">❌ Bekor qilish</a>
+</form>
+
+</body>
+</html>

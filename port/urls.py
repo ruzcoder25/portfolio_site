@@ -22,8 +22,15 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # port views
-    path('', include('port_view.urls')),
+    # user views
+    path('user/', include('port_view.urls')),
+    # admin
+    path('accounts/', include('account.urls')),
+    path('education/', include('education.urls')),
+    path('dashboard/', include('dashboard.urls')),
+    path('language/', include('language.urls')),
+    path('project/', include('projects.urls')),
+    path('skill/', include('skill.urls')),
 
 ]
 

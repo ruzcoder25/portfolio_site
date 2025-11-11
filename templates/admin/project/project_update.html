@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Loyihani tahrirlash</title>
+</head>
+<body>
+
+<h1>Loyihani tahrirlash</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Saqlash</button>
+</form>
+
+<p><a href="{% url 'project_list' %}">⬅ Orqaga qaytish</a></p>
+
+</body>
+</html>

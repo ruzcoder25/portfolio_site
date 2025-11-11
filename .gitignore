@@ -1,15 +1,33 @@
-# .gitignore
+# Python bytecode
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+*.pot
 *.pyc
 *.pyo
-*.pyd
-*.db
 *.sqlite3
+db.sqlite3
+media/
+staticfiles/
+.env
+*.env
+
+# Virtual environment
 env/
 venv/
 .venv/
+
+# IDE va editorlar
 .idea/
 .vscode/
-*.log
-*.env
-.env
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini

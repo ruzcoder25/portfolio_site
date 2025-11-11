@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.full_name }} - Profil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'admin/profile/profile.css' %}">
+</head>
+<body>
+
+<div class="profile-card shadow-lg">
+    <div class="profile-header">
+        {% if user.profile_image %}
+            <img src="{{ user.profile_image.url }}" alt="Profil rasmi" class="profile-img">
+        {% else %}
+            <img src="{% static 'img/default_profile.png' %}" alt="Profil rasmi" class="profile-img">
+        {% endif %}
+        <h3>{{ user.full_name }}</h3>
+        <p class="text-muted">{{ user.specialization|default:"Kasb ko‘rsatilmagan" }}</p>
+    </div>
+
+    <div class="profile-info">
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Telefon:</strong> {{ user.phone_number|default:"Ko‘rsatilmagan" }}</p>
+        <p><strong>Joylashuv:</strong> {{ user.location|default:"Ko‘rsatilmagan" }}</p>
+        <p><strong>Telegram:</strong>
+            {% if user.telegram %}
+                <a href="https://t.me/{{ user.telegram }}" target="_blank">@{{ user.telegram }}</a>
+            {% else %}
+                Ko‘rsatilmagan
+            {% endif %}
+        </p>
+        {% if user.github_link %}
+            <p><strong>GitHub:</strong> <a href="{{ user.github_link }}" target="_blank">{{ user.github_link }}</a></p>
+        {% endif %}
+        {% if user.linkedin_link %}
+            <p><strong>LinkedIn:</strong> <a href="{{ user.linkedin_link }}" target="_blank">{{ user.linkedin_link }}</a></p>
+        {% endif %}
+        {% if user.resume_file %}
+            <p><strong>Rezyume:</strong>
+                <a href="{{ user.resume_file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">Yuklab olish</a>
+            </p>
+        {% endif %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'update_profile' %}" class="btn btn-primary btn-lg edit-btn">Profilni tahrirlash</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'admin/profile/profile.js' %}"></script>
+</body>
+</html>

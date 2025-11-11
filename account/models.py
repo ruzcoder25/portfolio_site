@@ -19,6 +19,7 @@ class CustomUser(AbstractUser):
         null=True
     )
     telegram = models.CharField(max_length=100, blank=True, null=True)
+    password = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         db_table = 'custom_user'

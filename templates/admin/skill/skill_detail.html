@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ skill.name }}</title>
+</head>
+<body>
+
+<h1>{{ skill.name }}</h1>
+
+<p><strong>Toifa:</strong> {{ skill.get_category_display }}</p>
+<p><strong>Yaratilgan sana:</strong> {{ skill.created_at|date:"Y-m-d H:i" }}</p>
+
+{% if user.is_authenticated %}
+    <p>
+        <a href="{% url 'skill_update' skill.pk %}">Tahrirlash</a> |
+        <a href="{% url 'skill_delete' skill.pk %}">O‘chirish</a>
+    </p>
+{% endif %}
+
+<p><a href="{% url 'skill_list' %}">⬅ Ro‘yxatga qaytish</a></p>
+
+</body>
+</html>

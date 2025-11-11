@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Loyihani o‘chirish</title>
+</head>
+<body>
+
+<h1>Loyihani o‘chirish</h1>
+
+<p>Haqiqatan ham "{{ project.project_name }}" loyihasini o‘chirmoqchimisiz?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Ha, o‘chirilsin</button>
+    <a href="{% url 'project_list' %}">❌ Bekor qilish</a>
+</form>
+
+</body>
+</html>
