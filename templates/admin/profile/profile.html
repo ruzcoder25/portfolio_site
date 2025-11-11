@@ -5,52 +5,629 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user.full_name }} - Profil</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'admin/profile/profile.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #2c3e50;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #f8f9fa;
+            --dark-color: #34495e;
+            --text-color: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        .profile-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 30px 0;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Actions */
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-actions h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-actions h1 i {
+            color: var(--primary-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 25px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .profile-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .header-gradient {
+            background: linear-gradient(135deg, var(--primary-color), #5d8cc7);
+            height: 120px;
+            position: relative;
+        }
+
+        .profile-info-section {
+            padding: 0 30px 30px;
+            text-align: center;
+        }
+
+        .avatar-container {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .avatar-image {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: var(--shadow);
+            object-fit: cover;
+            display: block;
+            margin: -70px auto 0;
+            background: white;
+        }
+
+        .avatar-placeholder {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid white;
+            background: linear-gradient(135deg, var(--primary-color), #5d8cc7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            margin: -70px auto 0;
+            box-shadow: var(--shadow);
+        }
+
+        .user-info {
+            margin-bottom: 25px;
+            margin-top: 20px;
+        }
+
+        .user-name {
+            color: var(--secondary-color);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .user-badge {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .info-card h3 {
+            color: var(--secondary-color);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card h3 i {
+            color: var(--primary-color);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+            gap: 15px;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            min-width: 120px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-item span {
+            flex: 1;
+            color: var(--text-color);
+        }
+
+        /* Resume Section Styles */
+        .resume-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .resume-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .resume-file-name {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 5px;
+            word-break: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .resume-file-size {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .resume-actions {
+            flex-shrink: 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #5d8cc7);
+            color: white;
+            box-shadow: 0 4px 12px rgba(74, 111, 165, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(74, 111, 165, 0.3);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.3);
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+            color: white;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(39, 174, 96, 0.3);
+            color: white;
+        }
+
+        .btn-copy {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 8px 15px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+
+        .btn-copy:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 0 15px;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions h1 {
+                font-size: 1.8rem;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .profile-info-section {
+                padding: 0 20px 20px;
+            }
+
+            .user-name {
+                font-size: 1.7rem;
+            }
+
+            .avatar-image, .avatar-placeholder {
+                width: 120px;
+                height: 120px;
+                margin-top: -60px;
+            }
+
+            .avatar-placeholder {
+                font-size: 2.5rem;
+            }
+
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .info-item label {
+                min-width: auto;
+            }
+
+            .resume-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .resume-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header-actions h1 {
+                font-size: 1.6rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .avatar-image, .avatar-placeholder {
+                width: 100px;
+                height: 100px;
+                margin-top: -50px;
+            }
+
+            .avatar-placeholder {
+                font-size: 2rem;
+            }
+
+            .user-name {
+                font-size: 1.5rem;
+            }
+
+            .resume-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .resume-actions .btn {
+                width: 100%;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-card, .info-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Utility classes */
+        .text-truncate-custom {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            word-break: break-word;
+        }
+    </style>
 </head>
 <body>
+    <section class="profile-section">
+        <div class="profile-container">
 
-<div class="profile-card shadow-lg">
-    <div class="profile-header">
-        {% if user.profile_image %}
-            <img src="{{ user.profile_image.url }}" alt="Profil rasmi" class="profile-img">
-        {% else %}
-            <img src="{% static 'img/default_profile.png' %}" alt="Profil rasmi" class="profile-img">
-        {% endif %}
-        <h3>{{ user.full_name }}</h3>
-        <p class="text-muted">{{ user.specialization|default:"Kasb ko‘rsatilmagan" }}</p>
-    </div>
+            <!-- Header with Actions -->
+            <div class="header-actions">
+                <h1><i class="fas fa-user-circle"></i> Mening Profilim</h1>
+                <div class="action-buttons">
+                    <a href="{% url 'dashboard' %}" class="btn btn-info">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <a href="{% url 'update_profile' %}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i>
+                        Profilni tahrirlash
+                    </a>
+                </div>
+            </div>
 
-    <div class="profile-info">
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Telefon:</strong> {{ user.phone_number|default:"Ko‘rsatilmagan" }}</p>
-        <p><strong>Joylashuv:</strong> {{ user.location|default:"Ko‘rsatilmagan" }}</p>
-        <p><strong>Telegram:</strong>
-            {% if user.telegram %}
-                <a href="https://t.me/{{ user.telegram }}" target="_blank">@{{ user.telegram }}</a>
-            {% else %}
-                Ko‘rsatilmagan
-            {% endif %}
-        </p>
-        {% if user.github_link %}
-            <p><strong>GitHub:</strong> <a href="{{ user.github_link }}" target="_blank">{{ user.github_link }}</a></p>
-        {% endif %}
-        {% if user.linkedin_link %}
-            <p><strong>LinkedIn:</strong> <a href="{{ user.linkedin_link }}" target="_blank">{{ user.linkedin_link }}</a></p>
-        {% endif %}
-        {% if user.resume_file %}
-            <p><strong>Rezyume:</strong>
-                <a href="{{ user.resume_file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">Yuklab olish</a>
-            </p>
-        {% endif %}
-    </div>
+            <!-- VIEW MODE -->
+            <div id="viewMode">
+                <!-- Profile Header Card -->
+                <div class="profile-card">
+                    <div class="header-gradient"></div>
+                    <div class="profile-info-section">
+                        <div class="avatar-container">
+                            {% if user.profile_image %}
+                                <img src="{{ user.profile_image.url }}" class="avatar-image" alt="{{ user.full_name }}">
+                            {% else %}
+                                <div class="avatar-placeholder">{{ user.full_name.0|upper }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="user-info">
+                            <h1 class="user-name">{{ user.full_name }}</h1>
+                            {% if user.specialization %}
+                            <span class="user-badge">{{ user.specialization }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
 
-    <div class="text-center mt-4">
-        <a href="{% url 'update_profile' %}" class="btn btn-primary btn-lg edit-btn">Profilni tahrirlash</a>
-    </div>
-</div>
+                <!-- Contact Information -->
+                <div class="info-card">
+                    <h3><i class="fas fa-address-card"></i> Kontakt ma'lumotlari</h3>
+                    <div class="info-item">
+                        <label><i class="fas fa-envelope"></i> Email:</label>
+                        <span>{{ user.email }}</span>
+                        <button class="btn-copy" onclick="copyToClipboard('{{ user.email }}')">
+                            <i class="fas fa-copy"></i> Nusxalash
+                        </button>
+                    </div>
+                    {% if user.phone_number %}
+                    <div class="info-item">
+                        <label><i class="fas fa-phone"></i> Telefon:</label>
+                        <span>{{ user.phone_number }}</span>
+                        <button class="btn-copy" onclick="copyToClipboard('{{ user.phone_number }}')">
+                            <i class="fas fa-copy"></i> Nusxalash
+                        </button>
+                    </div>
+                    {% endif %}
+                    {% if user.location %}
+                    <div class="info-item">
+                        <label><i class="fas fa-map-marker-alt"></i> Joylashuv:</label>
+                        <span>{{ user.location }}</span>
+                    </div>
+                    {% endif %}
+                </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'admin/profile/profile.js' %}"></script>
+                <!-- Social Media -->
+                <div class="info-card">
+                    <h3><i class="fas fa-share-alt"></i> Ijtimoiy tarmoqlar</h3>
+                    {% if user.telegram %}
+                    <div class="info-item">
+                        <label><i class="fab fa-telegram"></i> Telegram:</label>
+                        <span>@{{ user.telegram }}</span>
+                        <button class="btn-copy" onclick="copyToClipboard('@{{ user.telegram }}')">
+                            <i class="fas fa-copy"></i> Nusxalash
+                        </button>
+                    </div>
+                    {% endif %}
+                    {% if user.github_link %}
+                    <div class="info-item">
+                        <label><i class="fab fa-github"></i> GitHub:</label>
+                        <span>{{ user.github_link }}</span>
+                        <button class="btn-copy" onclick="copyToClipboard('{{ user.github_link }}')">
+                            <i class="fas fa-copy"></i> Nusxalash
+                        </button>
+                    </div>
+                    {% endif %}
+                    {% if user.linkedin_link %}
+                    <div class="info-item">
+                        <label><i class="fab fa-linkedin"></i> LinkedIn:</label>
+                        <span>{{ user.linkedin_link }}</span>
+                        <button class="btn-copy" onclick="copyToClipboard('{{ user.linkedin_link }}')">
+                            <i class="fas fa-copy"></i> Nusxalash
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Resume Download -->
+                {% if user.resume_file %}
+                <div class="info-card">
+                    <h3><i class="fas fa-file-download"></i> Rezyume</h3>
+                    <div class="info-item">
+                        <label><i class="fas fa-file-pdf"></i> Fayl:</label>
+                        <div class="resume-section">
+                            <div class="resume-info">
+                                <div class="resume-file-name text-truncate-custom" title="{{ user.resume_file.name }}">
+                                    {{ user.resume_file.name|slice:"12:30" }}{% if user.resume_file.name|length > 30 %}...{% endif %}
+                                </div>
+                                <div class="resume-file-size">
+                                    {{ user.resume_file.size|filesizeformat }}
+                                </div>
+                            </div>
+                            <div class="resume-actions">
+                                <a href="{{ user.resume_file.url }}" download class="btn btn-success btn-sm">
+                                    <i class="fas fa-download"></i> Yuklab olish
+                                </a>
+                                <button class="btn-copy" onclick="copyToClipboard('{{ user.resume_file.url }}')" title="Havolani nusxalash">
+                                    <i class="fas fa-link"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Copy to clipboard function
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Muvaffaqiyatli nusxalandi!');
+            }).catch(err => {
+                showToast('Nusxalashda xatolik!');
+                console.error('Copy failed: ', err);
+            });
+        }
+
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Profil sahifasi yuklandi');
+
+            // Ensure images are properly loaded
+            const images = document.querySelectorAll('.avatar-image');
+            images.forEach(img => {
+                img.onload = function() {
+                    console.log('Rasm muvaffaqiyatli yuklandi');
+                };
+                img.onerror = function() {
+                    console.log('Rasm yuklashda xatolik');
+                };
+            });
+        });
+    </script>
 </body>
 </html>

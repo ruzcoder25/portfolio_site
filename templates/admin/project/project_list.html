@@ -2,39 +2,570 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loyihalar ro'yxati</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --text-color: #333;
+            --text-light: #777;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        .projects-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 30px 0;
+        }
+
+        .projects-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .projects-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .projects-header h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .projects-header h1 i {
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(46, 204, 113, 0.4);
+            background: linear-gradient(135deg, #27ae60, #219653);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            color: white;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid #e9ecef;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .project-card-header {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        .project-card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .project-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-name i {
+            font-size: 1.2rem;
+        }
+
+        .project-card-body {
+            padding: 25px;
+        }
+
+        .project-description {
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .project-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .meta-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .meta-value {
+            font-weight: 600;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meta-value i {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-primary {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+            color: white;
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: white;
+        }
+
+        .badge-info {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: white;
+            border: none;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+            color: white;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--light-color);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            max-width: 400px;
+            margin: 0 auto 20px;
+        }
+
+        /* Statistics cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .stat-icon.projects {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+        }
+
+        .stat-icon.types {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+        }
+
+        .stat-icon.recent {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+        }
+
+        .stat-info h4 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+
+        .stat-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .projects-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .project-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .project-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .projects-container {
+                padding: 0 15px;
+            }
+
+            .projects-header {
+                padding: 20px;
+            }
+
+            .projects-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-success, .btn-info {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
 </head>
 <body>
-<h1>Loyihalar ro'yxati</h1>
+    <section class="projects-section">
+        <div class="projects-container">
 
-{% if user.is_authenticated %}
-    <a href="{% url 'project_create' %}">➕ Yangi loyiha qo‘shish</a>
-{% endif %}
-<hr>
+            <!-- Projects Header -->
+            <div class="projects-header">
+                <h1><i class="fas fa-project-diagram"></i> Loyihalar ro'yxati</h1>
+                <div class="header-actions">
+                    <a href="{% url 'dashboard' %}" class="btn btn-info">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'project_create' %}" class="btn btn-success">
+                        <i class="fas fa-plus"></i>
+                        Yangi loyiha qo'shish
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
 
-{% if projects %}
-    {% for project in projects %}
-        <h3>{{ project.project_name }}</h3>
-        <p>{{ project.description|truncatechars:150 }}</p>
-        <p>Loyiha turi: {{ project.get_project_type_display }}</p>
-        <p>Ish turi: {{ project.get_work_type_display }}</p>
-        <p>Yaratilgan sana: {{ project.created_at|date:"Y-m-d" }}</p>
+            <!-- Projects Grid -->
+            <div class="projects-grid">
+                {% for project in projects %}
+                <div class="project-card">
+                    <div class="project-card-header">
+                        <div class="project-name">
+                            <i class="fas fa-code"></i>
+                            {{ project.project_name }}
+                        </div>
+                    </div>
 
-        {% if user.is_authenticated and project.user == user %}
-            <p>
-                <a href="{% url 'project_detail' project.pk %}">Batafsil</a> |
-                <a href="{% url 'project_update' project.pk %}">Tahrirlash</a> |
-                <a href="{% url 'project_delete' project.pk %}">O‘chirish</a>
-            </p>
-        {% else %}
-            <p><a href="{% url 'project_detail' project.pk %}">Batafsil</a></p>
-        {% endif %}
+                    <div class="project-card-body">
+                        <p class="project-description">
+                            {{ project.description|truncatechars:150 }}
+                        </p>
 
-        <hr>
-    {% endfor %}
-{% else %}
-    <p>Hozircha hech qanday loyiha yo‘q.</p>
-{% endif %}
+                        <div class="project-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Loyiha turi</span>
+                                <span class="meta-value">
+                                    <i class="fas fa-tag"></i>
+                                    <span class="badge badge-primary">{{ project.get_project_type_display }}</span>
+                                </span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Ish turi</span>
+                                <span class="meta-value">
+                                    <i class="fas fa-briefcase"></i>
+                                    <span class="badge badge-success">{{ project.get_work_type_display }}</span>
+                                </span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Yaratilgan sana</span>
+                                <span class="meta-value">
+                                    <i class="fas fa-calendar"></i>
+                                    {{ project.created_at|date:"Y-m-d" }}
+                                </span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Holati</span>
+                                <span class="meta-value">
+                                    <i class="fas fa-circle"></i>
+                                    <span class="badge badge-info">Faol</span>
+                                </span>
+                            </div>
+                        </div>
 
+                        <div class="project-actions">
+                            <a href="{% url 'project_detail' project.pk %}" class="btn btn-primary">
+                                <i class="fas fa-eye"></i>
+                                Batafsil
+                            </a>
+                            {% if user.is_authenticated and project.user == user %}
+                            <a href="{% url 'project_update' project.pk %}" class="btn btn-warning">
+                                <i class="fas fa-edit"></i>
+                                Tahrirlash
+                            </a>
+                            <a href="{% url 'project_delete' project.pk %}" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                                O'chirish
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-project-diagram"></i>
+                    <h3>Hozircha hech qanday loyiha yo'q</h3>
+                    <p>Loyihalaringizni qo'shish uchun quyidagi tugmani bosing</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'project_create' %}" class="btn btn-success">
+                        <i class="fas fa-plus"></i>
+                        Birinchi loyihani qo'shish
+                    </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // O'chirish tugmasi uchun tasdiq
+            const deleteButtons = document.querySelectorAll('.btn-danger');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (!confirm('Bu loyihani o\'chirishni istaysizmi?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

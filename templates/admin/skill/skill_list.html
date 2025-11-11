@@ -2,38 +2,456 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <title>Ko‘nikmalar ro'yxati</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ko'nikmalar ro'yxati</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #2c3e50;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #f8f9fa;
+            --dark-color: #34495e;
+            --text-color: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        .skills-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 30px 0;
+        }
+
+        .skills-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .skills-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .skills-header h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .skills-header h1 i {
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(39, 174, 96, 0.3);
+            background: linear-gradient(135deg, #219653, #1e8449);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.3);
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            color: white;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .skill-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid #e9ecef;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .skill-card-header {
+            background: linear-gradient(135deg, var(--primary-color), #5d8cc7);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        .skill-card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .skill-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skill-name i {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .skill-card-body {
+            padding: 25px;
+        }
+
+        .skill-meta {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .meta-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .meta-value {
+            font-weight: 600;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meta-value i {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-primary {
+            background: linear-gradient(135deg, var(--primary-color), #5d8cc7);
+            color: white;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+            color: white;
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: white;
+        }
+
+        .badge-info {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+
+        .skill-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: white;
+            border: none;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.2);
+            color: white;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            max-width: 400px;
+            margin: 0 auto 20px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .skills-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skill-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .skills-container {
+                padding: 0 15px;
+            }
+
+            .skills-header {
+                padding: 20px;
+            }
+
+            .skills-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-success, .btn-info {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .skill-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
 </head>
 <body>
+    <section class="skills-section">
+        <div class="skills-container">
 
-<h1>Ko‘nikmalar ro'yxati</h1>
+            <!-- Skills Header -->
+            <div class="skills-header">
+                <h1><i class="fas fa-code"></i> Ko'nikmalar ro'yxati</h1>
+                <div class="header-actions">
+                    <a href="{% url 'dashboard' %}" class="btn btn-info">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'skill_create' %}" class="btn btn-success">
+                        <i class="fas fa-plus"></i>
+                        Yangi ko'nikma qo'shish
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
 
-{% if user.is_authenticated %}
-    <a href="{% url 'skill_create' %}">➕ Yangi ko‘nikma qo‘shish</a>
-{% endif %}
-<hr>
+            <!-- Skills Grid -->
+            <div class="skills-grid">
+                {% for skill in skills %}
+                <div class="skill-card">
+                    <div class="skill-card-header">
+                        <div class="skill-name">
+                            <i class="fas fa-cog"></i>
+                            {{ skill.name }}
+                        </div>
+                    </div>
 
-{% if skills %}
-    {% for skill in skills %}
-        <h3>{{ skill.name }}</h3>
-        <p>Toifa: {{ skill.get_category_display }}</p>
-        <p>Yaratilgan sana: {{ skill.created_at|date:"Y-m-d" }}</p>
+                    <div class="skill-card-body">
+                        <div class="skill-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Toifa</span>
+                                <span class="meta-value">
+                                    <i class="fas fa-tag"></i>
+                                    <span class="badge badge-primary">{{ skill.get_category_display }}</span>
+                                </span>
+                            </div>
+                        </div>
 
-        {% if user.is_authenticated %}
-            <p>
-                <a href="{% url 'skill_detail' skill.pk %}">Batafsil</a> |
-                <a href="{% url 'skill_update' skill.pk %}">Tahrirlash</a> |
-                <a href="{% url 'skill_delete' skill.pk %}">O‘chirish</a>
-            </p>
-        {% else %}
-            <p><a href="{% url 'skill_detail' skill.pk %}">Batafsil</a></p>
-        {% endif %}
+                        {% if user.is_authenticated %}
+                        <div class="skill-actions">
+                            <a href="{% url 'skill_update' skill.pk %}" class="btn btn-warning">
+                                <i class="fas fa-edit"></i>
+                                Tahrirlash
+                            </a>
+                            <a href="{% url 'skill_delete' skill.pk %}" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                                O'chirish
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-code"></i>
+                    <h3>Hozircha hech qanday ko'nikma yo'q</h3>
+                    <p>Ko'nikmalaringizni qo'shish uchun quyidagi tugmani bosing</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'skill_create' %}" class="btn btn-success">
+                        <i class="fas fa-plus"></i>
+                        Birinchi ko'nikmani qo'shish
+                    </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
 
-        <hr>
-    {% endfor %}
-{% else %}
-    <p>Hozircha hech qanday ko‘nikma yo‘q.</p>
-{% endif %}
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // O'chirish tugmasi uchun tasdiq
+            const deleteButtons = document.querySelectorAll('.btn-danger');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (!confirm('Bu ko\'nikmani o\'chirishni istaysizmi?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

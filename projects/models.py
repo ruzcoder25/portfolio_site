@@ -27,11 +27,11 @@ class Project(models.Model):
     project_type = models.CharField(max_length=20, choices=PROJECT_TYPE_CHOICES, default='practice')
     work_type = models.CharField(max_length=20, choices=WORK_TYPE_CHOICES, default='personal')
     created_at = models.DateTimeField(default=timezone.now)
-    order = models.IntegerField(default=0)
+
 
     class Meta:
         db_table = 'project'
-        ordering = ['-order', '-created_at']
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.project_name

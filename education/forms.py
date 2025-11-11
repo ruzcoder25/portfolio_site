@@ -1,5 +1,5 @@
 from django import forms
-from .models import Education
+from .models import Education, DegreeChoices
 
 class EducationForm(forms.ModelForm):
     class Meta:
@@ -8,7 +8,7 @@ class EducationForm(forms.ModelForm):
         widgets = {
             'university': forms.TextInput(attrs={'class': 'form-control'}),
             'specialization': forms.TextInput(attrs={'class': 'form-control'}),
-            'degree': forms.TextInput(attrs={'class': 'form-control'}),
+            'degree': forms.Select(attrs={'class': 'form-control'}),  # <- bu o'zgardi
             'start_year': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'YYYY'}),
             'end_year': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'YYYY'}),
         }

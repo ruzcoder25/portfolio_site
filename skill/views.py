@@ -3,18 +3,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from .models import Skill
-from .forms import SkillForm  # SkillForm-ni avval forms.py-da yaratishingiz kerak
+from .forms import SkillForm
 
+# SkillForm-ni avval forms.py-da yaratishingiz kerak
 # Ro'yxat — barcha foydalanuvchilar ko‘rishi mumkin
 def skill_list(request):
     skills = Skill.objects.all()
     return render(request, 'admin/skill/skill_list.html', {'skills': skills})
 
-# Batafsil — login talab qilinadi
-@login_required
-def skill_detail(request, pk):
-    skill = get_object_or_404(Skill, pk=pk)
-    return render(request, 'admin/skill/skill_detail.html', {'skill': skill})
 
 # Yaratish — login talab qilinadi
 @login_required

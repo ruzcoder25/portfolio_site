@@ -1,33 +1,560 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ta'lim Ma'lumotlari</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --text-color: #333;
+            --text-light: #777;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
 
-<h3>Ta'lim ma'lumotlari</h3>
-<a href="{% url 'education_add' %}" class="btn btn-success mb-3">Yangi qo'shish</a>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Universitet</th>
-            <th>Mutaxassislik</th>
-            <th>Daraja</th>
-            <th>Davr</th>
-            <th>Harakatlar</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for edu in educations %}
-        <tr>
-            <td>{{ edu.university }}</td>
-            <td>{{ edu.specialization }}</td>
-            <td>{{ edu.degree }}</td>
-            <td>{{ edu.start_year }} - {{ edu.end_year }}</td>
-            <td>
-                <a href="{% url 'education_edit' edu.pk %}" class="btn btn-primary btn-sm">Tahrirlash</a>
-                <a href="{% url 'education_delete' edu.pk %}" class="btn btn-danger btn-sm">O'chirish</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">Ma'lumot topilmadi</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        .education-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 30px 0;
+        }
 
+        .education-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .education-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .education-header h3 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .education-header h3 i {
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(46, 204, 113, 0.4);
+            background: linear-gradient(135deg, #27ae60, #219653);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            color: white;
+        }
+
+        /* Enhanced Table Styles */
+        .education-table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .table {
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            border: none;
+            padding: 18px 16px;
+            font-weight: 600;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .table thead th:first-child {
+            border-top-left-radius: var(--border-radius);
+        }
+
+        .table thead th:last-child {
+            border-top-right-radius: var(--border-radius);
+        }
+
+        .table tbody tr {
+            transition: var(--transition);
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .table tbody td {
+            padding: 16px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+            font-size: 0.95rem;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* University column styling */
+        .university-cell {
+            font-weight: 600;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .university-cell i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        /* Specialization styling */
+        .specialization-cell {
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        /* Degree badge styling */
+        .degree-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .degree-badge.bachelor {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+        }
+
+        .degree-badge.master {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+        }
+
+        .degree-badge.certificate {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        /* Period styling */
+        .period-cell {
+            color: var(--text-light);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .period-cell i {
+            color: var(--primary-color);
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+            color: white;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--light-color);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h4 {
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            max-width: 400px;
+            margin: 0 auto 20px;
+        }
+
+        /* Statistics cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .stat-icon.education {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+        }
+
+        .stat-icon.years {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+        }
+
+        .stat-icon.degree {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+        }
+
+        .stat-info h4 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+
+        .stat-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .education-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .table-responsive {
+                border-radius: var(--border-radius);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-danger {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .education-container {
+                padding: 0 15px;
+            }
+
+            .education-header {
+                padding: 20px;
+            }
+
+            .education-header h3 {
+                font-size: 1.5rem;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-success, .btn-info {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .table thead th {
+                padding: 14px 12px;
+                font-size: 0.9rem;
+            }
+
+            .table tbody td {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .table tbody tr {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <section class="education-section">
+        <div class="education-container">
+
+            <!-- Education Header -->
+            <div class="education-header">
+                <h3><i class="fas fa-graduation-cap"></i> Ta'lim ma'lumotlari</h3>
+                <div class="header-actions">
+                    <a href="{% url 'dashboard' %}" class="btn btn-info">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    <a href="{% url 'education_add' %}" class="btn btn-success">
+                        <i class="fas fa-plus"></i>
+                        Yangi qo'shish
+                    </a>
+                </div>
+            </div>
+
+            <!-- Education Table -->
+            <div class="education-table-container">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Universitet</th>
+                                <th>Mutaxassislik</th>
+                                <th>Daraja</th>
+                                <th>Davr</th>
+                                <th>Harakatlar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for edu in educations %}
+                            <tr>
+                                <td>
+                                    <div class="university-cell">
+                                        <i class="fas fa-university"></i>
+                                        {{ edu.university }}
+                                    </div>
+                                </td>
+                                <td class="specialization-cell">{{ edu.specialization }}</td>
+                                <td>
+                                    {% if "bakalavr" in edu.degree.lower %}
+                                        <span class="degree-badge bachelor">{{ edu.degree }}</span>
+                                    {% elif "magistr" in edu.degree.lower %}
+                                        <span class="degree-badge master">{{ edu.degree }}</span>
+                                    {% else %}
+                                        <span class="degree-badge certificate">{{ edu.degree }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="period-cell">
+                                    <i class="fas fa-calendar"></i>
+                                    {{ edu.start_year }} - {{ edu.end_year }}
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="{% url 'education_edit' edu.pk %}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                            Tahrirlash
+                                        </a>
+                                        <a href="{% url 'education_delete' edu.pk %}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                            O'chirish
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5">
+                                    <div class="empty-state">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        <h4>Ma'lumot topilmadi</h4>
+                                        <p>Hali hech qanday ta'lim ma'lumotlari qo'shilmagan</p>
+                                        <a href="{% url 'education_add' %}" class="btn btn-success">
+                                            <i class="fas fa-plus"></i>
+                                            Birinchi ma'lumotni qo'shish
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ma'lumotlar sonini yangilash
+            const educationRows = document.querySelectorAll('tbody tr:not(.empty-state)');
+            document.getElementById('educationCount').textContent = educationRows.length;
+            
+            // Hover effektlari
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // O'chirish tugmasi uchun tasdiq
+            const deleteButtons = document.querySelectorAll('.btn-danger');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (!confirm('Bu ma\'lumotni o\'chirishni istaysizmi?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

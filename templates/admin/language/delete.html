@@ -1,9 +1,94 @@
-<h2>Tilni o‘chirish</h2>
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tilni o‘chirish</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9fafb;
+            margin: 0;
+            padding: 40px;
+        }
 
-<p>Rostdan ham <strong>{{ object.name }}</strong> tilini o‘chirmoqchimisiz?</p>
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-align: center;
+        }
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Ha, o‘chirish</button>
-    <a href="{% url 'language_list' %}" class="btn btn-secondary">Yo‘q, bekor qilish</a>
-</form>
+        h2 {
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        strong {
+            color: #000;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #b52a37;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Responsiv */
+        @media (max-width: 600px) {
+            body {
+                padding: 20px;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Tilni o‘chirish</h2>
+        <p>Rostdan ham <strong>{{ object.name }}</strong> tilini o‘chirmoqchimisiz?</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Ha, o‘chirish</button>
+            <a href="{% url 'language_list' %}" class="btn btn-secondary">Yo‘q, bekor qilish</a>
+        </form>
+    </div>
+
+</body>
+</html>

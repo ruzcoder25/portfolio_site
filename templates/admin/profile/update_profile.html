@@ -5,85 +5,919 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profilni tahrirlash</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'admin/profile/update_profile.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #5d8cc7;
+            --secondary-color: #4a6572;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+            --warning-color: #ff9800;
+            --light-color: #f8f9fa;
+            --dark-color: #37474f;
+            --text-color: #455a64;
+            --text-light: #78909c;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2f7 100%);
+            min-height: 100vh;
+            padding: 30px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .update-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .update-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 30px;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .update-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .update-card h3 {
+            color: var(--secondary-color);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .update-card h3 i {
+            color: var(--primary-color);
+        }
+
+        .header-subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Profile Image Section */
+        .profile-image-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef2f7 100%);
+            border-radius: var(--border-radius);
+            border: 2px dashed #e0e0e0;
+            transition: var(--transition);
+        }
+
+        .profile-image-section:hover {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8edf5 100%);
+        }
+
+        .profile-img-preview {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            transition: var(--transition);
+        }
+
+        .image-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .image-action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .image-upload-btn {
+            background: linear-gradient(135deg, var(--primary-color), #6fa3e0);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .image-upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(93, 140, 199, 0.3);
+            background: linear-gradient(135deg, #6fa3e0, #5d8cc7);
+        }
+
+        .image-remove-btn {
+            background: transparent;
+            border: 2px solid var(--danger-color);
+            color: var(--danger-color);
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .image-remove-btn:hover {
+            background: var(--danger-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .upload-info {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-align: center;
+            max-width: 300px;
+        }
+
+        /* Status indicators */
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+
+        .status-success {
+            color: #2e7d32;
+            background: #e8f5e8;
+        }
+
+        .status-warning {
+            color: #ef6c00;
+            background: #fff3e0;
+        }
+
+        .status-info {
+            color: #1565c0;
+            background: #e3f2fd;
+        }
+
+        /* Form Styles */
+        .form-label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-label i {
+            color: var(--primary-color);
+            width: 16px;
+        }
+
+        .form-control {
+            border: 2px solid #e0e7ff;
+            border-radius: var(--border-radius);
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: #fafbfc;
+            color: var(--text-color);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(93, 140, 199, 0.1);
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #b0bec5;
+        }
+
+        /* File Input Styling */
+        .file-input-section {
+            margin-bottom: 20px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .file-input-main {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border: 2px dashed #e0e0e0;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .file-input-main:hover {
+            border-color: var(--primary-color);
+            background: #f0f4f8;
+        }
+
+        .file-input-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), #6fa3e0);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+            font-size: 1.2rem;
+        }
+
+        .file-input-content {
+            flex: 1;
+        }
+
+        .file-input-title {
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .file-input-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .file-input-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .file-input-btn:hover {
+            background: #6fa3e0;
+            transform: translateY(-1px);
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .file-remove-btn {
+            background: transparent;
+            border: 2px solid var(--danger-color);
+            color: var(--danger-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .file-remove-btn:hover {
+            background: var(--danger-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 30px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #6fa3e0);
+            color: white;
+            box-shadow: 0 4px 12px rgba(93, 140, 199, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(93, 140, 199, 0.3);
+            background: linear-gradient(135deg, #6fa3e0, #5d8cc7);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #90a4ae, #78909c);
+            color: white;
+            box-shadow: 0 4px 12px rgba(144, 164, 174, 0.2);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(144, 164, 174, 0.3);
+            background: linear-gradient(135deg, #78909c, #90a4ae);
+            color: white;
+        }
+
+        /* Alert Styles */
+        .alert {
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border-left-color: #4caf50;
+        }
+
+        .alert-error {
+            background: #ffebee;
+            color: #c62828;
+            border-left-color: #f44336;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+            color: #ef6c00;
+            border-left-color: #ff9800;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* Section headers */
+        .section-header {
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 40px 0 25px 0;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #eef2f7;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header i {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .update-container {
+                padding: 0 15px;
+            }
+
+            .update-card {
+                padding: 30px 20px;
+            }
+
+            .update-card h3 {
+                font-size: 1.7rem;
+            }
+
+            .profile-img-preview {
+                width: 140px;
+                height: 140px;
+            }
+
+            .image-action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .image-upload-btn, .image-remove-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .file-input-main {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .file-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .file-input-btn, .file-remove-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .update-card h3 {
+                font-size: 1.5rem;
+            }
+
+            .profile-img-preview {
+                width: 120px;
+                height: 120px;
+            }
+
+            .profile-image-section {
+                padding: 30px 20px;
+            }
+
+            .section-header {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .update-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Form group spacing */
+        .form-group {
+            margin-bottom: 25px;
+        }
+    </style>
 </head>
 <body>
-
-<div class="update-card shadow-lg">
-    <h3 class="text-center mb-4">Profilni tahrirlash</h3>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="update-container">
+        <div class="update-card">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h3>
+                    <i class="fas fa-user-edit"></i>
+                    Profilni yangilash
+                </h3>
+                <p class="header-subtitle">Shaxsiy ma'lumotlaringizni yangilang</p>
             </div>
-        {% endfor %}
-    {% endif %}
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        <div class="text-center mb-3">
-            {% if user.profile_image %}
-                <img src="{{ user.profile_image.url }}" alt="Profil rasmi" class="profile-img-preview" id="profilePreview">
-            {% else %}
-                <img src="{% static 'img/default_profile.png' %}" alt="Profil rasmi" class="profile-img-preview" id="profilePreview">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if forloop.first %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
-        </div>
 
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label class="form-label">To‘liq ism</label>
-                {{ form.full_name }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Email</label>
-                {{ form.email }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Telefon raqam</label>
-                {{ form.phone_number }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Mutaxassislik</label>
-                {{ form.specialization }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Manzil</label>
-                {{ form.location }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Profil rasmi</label>
-                {{ form.profile_image }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">GitHub link</label>
-                {{ form.github_link }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">LinkedIn link</label>
-                {{ form.linkedin_link }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Telegram username</label>
-                {{ form.telegram }}
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Rezyume (PDF, DOCX va h.k.)</label>
-                {{ form.resume_file }}
-            </div>
-        </div>
+            <form method="POST" enctype="multipart/form-data" id="profileForm">
+                {% csrf_token %}
 
-        <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary btn-lg">Saqlash</button>
-            <a href="{% url 'profile' %}" class="btn btn-secondary btn-lg">Bekor qilish</a>
-        </div>
-    </form>
-</div>
+                <!-- Profile Image Section -->
+                <div class="profile-image-section">
+                    {% if user.profile_image %}
+                        <img src="{{ user.profile_image.url }}" alt="Profil rasmi" class="profile-img-preview" id="profilePreview">
+                        <div class="status-indicator status-success">
+                            <i class="fas fa-check-circle"></i>
+                            Profil rasmi mavjud
+                        </div>
+                    {% else %}
+                        <img src="{% static 'img/default_profile.png' %}" alt="Profil rasmi" class="profile-img-preview" id="profilePreview">
+                        <div class="status-indicator status-warning">
+                            <i class="fas fa-info-circle"></i>
+                            Profil rasmi mavjud emas
+                        </div>
+                    {% endif %}
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'admin/profile/update_profile.js' %}"></script>
+                    <div class="image-actions">
+                        <div class="image-action-buttons">
+                            <button type="button" class="image-upload-btn" onclick="document.getElementById('id_profile_image').click()">
+                                <i class="fas fa-camera"></i>
+                                {% if user.profile_image %}Rasmni yangilash{% else %}Rasm qo'shish{% endif %}
+                            </button>
+
+                            {% if user.profile_image %}
+                            <button type="button" class="image-remove-btn" onclick="removeProfileImage()">
+                                <i class="fas fa-trash"></i>
+                                Rasmni olib tashlash
+                            </button>
+                            {% endif %}
+                        </div>
+
+                        {{ form.profile_image }}
+
+                        <div class="upload-info">
+                            <i class="fas fa-info-circle"></i>
+                            JPG, PNG yoki WEBX formatlari qo'llab-quvvatlanadi. Maksimal hajm: 5MB
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Information Section -->
+                <div class="section-header">
+                    <i class="fas fa-user-circle"></i>
+                    Shaxsiy ma'lumotlar
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">
+                            <i class="fas fa-user"></i>
+                            To'liq ism
+                        </label>
+                        {{ form.full_name }}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">
+                            <i class="fas fa-envelope"></i>
+                            Email manzil
+                        </label>
+                        {{ form.email }}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">
+                            <i class="fas fa-phone"></i>
+                            Telefon raqam
+                        </label>
+                        {{ form.phone_number }}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">
+                            <i class="fas fa-briefcase"></i>
+                            Mutaxassislik
+                        </label>
+                        {{ form.specialization }}
+                    </div>
+                    <div class="col-12 form-group">
+                        <label class="form-label">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Manzil
+                        </label>
+                        {{ form.location }}
+                    </div>
+                </div>
+
+                <!-- Social Media Section -->
+                <div class="section-header">
+                    <i class="fas fa-share-alt"></i>
+                    Ijtimoiy tarmoqlar
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">
+                            <i class="fab fa-github"></i>
+                            GitHub profili
+                        </label>
+                        {{ form.github_link }}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">
+                            <i class="fab fa-linkedin"></i>
+                            LinkedIn profili
+                        </label>
+                        {{ form.linkedin_link }}
+                    </div>
+                    <div class="col-12 form-group">
+                        <label class="form-label">
+                            <i class="fab fa-telegram"></i>
+                            Telegram username
+                        </label>
+                        {{ form.telegram }}
+                    </div>
+                </div>
+
+                <!-- Resume File Section -->
+                <div class="section-header">
+                    <i class="fas fa-file-alt"></i>
+                    Rezyume
+                </div>
+
+                <div class="file-input-section">
+                    <div class="file-input-area">
+                        <div class="file-input-wrapper">
+                            <div class="file-input-main" onclick="document.getElementById('id_resume_file').click()">
+                                <div class="file-input-icon">
+                                    <i class="fas fa-file-upload"></i>
+                                </div>
+                                <div class="file-input-content">
+                                    <div class="file-input-title" id="resumeFileName">
+                                        {% if user.resume_file %}
+                                            Rezyume fayli mavjud
+                                        {% else %}
+                                            Rezyume faylini yuklang
+                                        {% endif %}
+                                    </div>
+                                    <div class="file-input-subtitle">
+                                        PDF yoki DOCX formatlari qabul qilinadi. Maksimal hajm: 10MB
+                                    </div>
+                                </div>
+                                <div class="file-input-btn">
+                                    <i class="fas fa-folder-open"></i>
+                                    {% if user.resume_file %}Faylni yangilash{% else %}Fayl tanlash{% endif %}
+                                </div>
+                            </div>
+                            {{ form.resume_file }}
+                        </div>
+
+                        {% if user.resume_file %}
+                        <div class="file-actions">
+                            <button type="button" class="file-remove-btn" onclick="removeResumeFile()">
+                                <i class="fas fa-times"></i>
+                                Rezyumeni olib tashlash
+                            </button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        O'zgarishlarni saqlash
+                    </button>
+                    <a href="{% url 'profile' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Profilga qaytish
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Profile image preview
+        function previewProfileImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('profilePreview');
+            const uploadBtn = document.querySelector('.image-upload-btn');
+            const statusIndicator = document.querySelector('.status-indicator');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+
+                reader.readAsDataURL(input.files[0]);
+
+                // Yangilash tugmasiga o'zgartirish
+                if (uploadBtn) {
+                    uploadBtn.innerHTML = '<i class="fas fa-camera"></i> Rasmni yangilash';
+                }
+
+                // Statusni yangilash
+                if (statusIndicator) {
+                    statusIndicator.innerHTML = '<i class="fas fa-sync-alt"></i> Yangi rasm tanlandi';
+                    statusIndicator.className = 'status-indicator status-info';
+                }
+
+                // Agar rasm olib tashlash tugmasi yo'q bo'lsa, qo'shish
+                if (!document.querySelector('.image-remove-btn')) {
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'image-remove-btn';
+                    removeBtn.innerHTML = '<i class="fas fa-trash"></i> Rasmni olib tashlash';
+                    removeBtn.onclick = removeProfileImage;
+
+                    const actionButtons = document.querySelector('.image-action-buttons');
+                    actionButtons.appendChild(removeBtn);
+                }
+            }
+        }
+
+        // Remove profile image
+        function removeProfileImage() {
+            const profileImageInput = document.getElementById('id_profile_image');
+            const preview = document.getElementById('profilePreview');
+            const defaultImage = "{% static 'img/default_profile.png' %}";
+            const uploadBtn = document.querySelector('.image-upload-btn');
+            const removeBtn = document.querySelector('.image-remove-btn');
+            const statusIndicator = document.querySelector('.status-indicator');
+
+            profileImageInput.value = '';
+            preview.src = defaultImage;
+
+            if (uploadBtn) {
+                uploadBtn.innerHTML = '<i class="fas fa-camera"></i> Rasm qo\'shish';
+            }
+
+            if (removeBtn) {
+                removeBtn.remove();
+            }
+
+            // Statusni yangilash
+            if (statusIndicator) {
+                statusIndicator.innerHTML = '<i class="fas fa-info-circle"></i> Profil rasmi mavjud emas';
+                statusIndicator.className = 'status-indicator status-warning';
+            }
+
+            // Signal uchun hidden input qo'shish
+            let clearImageInput = document.getElementById('clear_profile_image');
+            if (!clearImageInput) {
+                clearImageInput = document.createElement('input');
+                clearImageInput.type = 'hidden';
+                clearImageInput.name = 'clear_profile_image';
+                clearImageInput.id = 'clear_profile_image';
+                clearImageInput.value = 'true';
+                document.getElementById('profileForm').appendChild(clearImageInput);
+            }
+        }
+
+        // Resume file name display
+        function updateResumeFileName(event) {
+            const input = event.target;
+            const fileName = document.getElementById('resumeFileName');
+            const fileBtn = document.querySelector('.file-input-btn');
+
+            if (input.files && input.files[0]) {
+                fileName.textContent = 'Yangi fayl tanlandi';
+                if (fileBtn) {
+                    fileBtn.innerHTML = '<i class="fas fa-folder-open"></i> Faylni yangilash';
+                }
+
+                // Agar olib tashlash tugmasi yo'q bo'lsa, qo'shish
+                if (!document.querySelector('.file-remove-btn')) {
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'file-remove-btn';
+                    removeBtn.innerHTML = '<i class="fas fa-times"></i> Rezyumeni olib tashlash';
+                    removeBtn.onclick = removeResumeFile;
+
+                    const fileActions = document.querySelector('.file-actions');
+                    if (fileActions) {
+                        fileActions.appendChild(removeBtn);
+                    } else {
+                        const fileArea = document.querySelector('.file-input-area');
+                        const actionsDiv = document.createElement('div');
+                        actionsDiv.className = 'file-actions';
+                        actionsDiv.appendChild(removeBtn);
+                        fileArea.appendChild(actionsDiv);
+                    }
+                }
+            }
+        }
+
+        // Remove resume file
+        function removeResumeFile() {
+            const resumeFileInput = document.getElementById('id_resume_file');
+            const fileName = document.getElementById('resumeFileName');
+            const fileBtn = document.querySelector('.file-input-btn');
+            const removeBtn = document.querySelector('.file-remove-btn');
+            const fileActions = document.querySelector('.file-actions');
+
+            resumeFileInput.value = '';
+            fileName.textContent = 'Rezyume faylini yuklang';
+
+            if (fileBtn) {
+                fileBtn.innerHTML = '<i class="fas fa-folder-open"></i> Fayl tanlash';
+            }
+
+            if (removeBtn) {
+                removeBtn.remove();
+            }
+
+            if (fileActions && fileActions.children.length === 0) {
+                fileActions.remove();
+            }
+
+            // Signal uchun hidden input qo'shish
+            let clearResumeInput = document.getElementById('clear_resume_file');
+            if (!clearResumeInput) {
+                clearResumeInput = document.createElement('input');
+                clearResumeInput.type = 'hidden';
+                clearResumeInput.name = 'clear_resume_file';
+                clearResumeInput.id = 'clear_resume_file';
+                clearResumeInput.value = 'true';
+                document.getElementById('profileForm').appendChild(clearResumeInput);
+            }
+        }
+
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Profile image input
+            const profileImageInput = document.getElementById('id_profile_image');
+            if (profileImageInput) {
+                profileImageInput.addEventListener('change', previewProfileImage);
+                profileImageInput.style.display = 'none';
+            }
+
+            // Resume file input
+            const resumeFileInput = document.getElementById('id_resume_file');
+            if (resumeFileInput) {
+                resumeFileInput.addEventListener('change', updateResumeFileName);
+            }
+
+            // Add form-control class to all form inputs
+            const formInputs = document.querySelectorAll('input, select, textarea');
+            formInputs.forEach(input => {
+                if (input.type !== 'file' && input.type !== 'submit' && input.type !== 'button') {
+                    input.classList.add('form-control');
+                }
+            });
+
+            // Add form-select class to select elements
+            const selectElements = document.querySelectorAll('select');
+            selectElements.forEach(select => {
+                select.classList.add('form-select');
+            });
+        });
+    </script>
 </body>
 </html>

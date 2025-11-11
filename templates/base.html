@@ -19,12 +19,17 @@
 
                 <div class="nav-menu" id="navMenu">
                     <a href="#home" class="nav-link">Bosh sahifa</a>
-                    <a href="#about" class="nav-link">Ta'lim</a>
+                    {% if has_education_or_languages %}
+                    <a href="#education-languages" class="nav-link">Ta'lim</a>
+                    {% endif %}
+                    {% if skill_categories %}
                     <a href="#skills" class="nav-link">Ko'nikmalar</a>
+                    {% endif %}
+                    {% if real_projects or practice_projects %}
                     <a href="#experience" class="nav-link">Loyihalar</a>
+                    {% endif %}
                     <a href="#contact" class="nav-link">Bog'lanish</a>
-                    {% if user.is_authenticated %}
-                    <!-- Faqat login qilgan foydalanuvchi ko‘radi -->
+                    {% if request.user.is_authenticated %}
                     <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
                     {% endif %}
                 </div>
@@ -103,30 +108,63 @@
         </div>
     </section>
 
-    <!-- Education Section -->
-    {% if educations %}
-    <section id="about" class="about">
-        <div class="container">
-            <h2 class="section-title">Ta'lim</h2>
-            <p class="section-subtitle">Mening akademik yo'nalishlarim va ta'lim tarixim</p>
+    <!-- Education and Languages Section -->
 
-            <div class="education-timeline">
-                {% for edu in educations %}
-                <div class="timeline-card">
-                    <div class="timeline-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                        </svg>
-                    </div>
-                    <div class="timeline-card-content">
-                        <div class="timeline-date">{{ edu.start_year }} - {{ edu.end_year }}</div>
-                        <h3 class="timeline-title">{{ edu.university }}</h3>
-                        <p class="timeline-degree">{{ edu.degree }}</p>
-                        <p class="timeline-specialization">{{ edu.specialization }}</p>
+    {% if has_education_or_languages %}
+
+    <section id="education-languages" class="about">
+        <div class="container fade-in">
+            <h2 class="section-title">Ta'lim va Tillar</h2>
+            <p class="section-subtitle">Mening akademik yo'nalishlarim va til ko'nikmalarim</p>
+            <div class="education-language-wrapper">
+
+                <!-- Education -->
+                {% if educations %}
+
+                <div class="education-column">
+                    <h3 class="sub-section-title">🎓 Ta'lim</h3>
+                    <div class="education-timeline">
+                        {% for edu in educations %}
+                        <div class="timeline-card">
+                            <div class="timeline-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                                </svg>
+                            </div>
+                            <div class="timeline-card-content">
+                                <div class="timeline-date">{{ edu.start_year }} - {{ edu.end_year }}</div>
+                                <h4 class="timeline-title">{{ edu.university }}</h4>
+                                <p class="timeline-degree">{{ edu.degree }}</p>
+                                <p class="timeline-specialization">{{ edu.specialization }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
-                {% endfor %}
+                {% endif %}
+
+                <!-- Languages -->
+                {% if languages %}
+                <div class="language-column">
+                    <h3 class="sub-section-title">🗣️ Tillar</h3>
+                    <div class="language-list">
+                        {% for lang in languages %}
+                        <div class="language-item">
+                            <div class="language-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M12 3v18m9-9H3"/>
+                                </svg>
+                            </div>
+                            <div class="language-info">
+                                <span class="language-name">{{ lang.name }}</span>
+                                <span class="language-level">{{ lang.get_level_display }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </section>
@@ -170,7 +208,7 @@
                         {{ category.display_name }}
                     </h3>
                     <div class="skills-grid">
-                        {% for skill in category.skills.all %}
+                        {% for skill in category.skills %}
                         <div class="skill-item">
                             <span class="skill-name">{{ skill.name }}</span>
                         </div>

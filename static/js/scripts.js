@@ -397,20 +397,131 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// ==================== CONSOLE MESSAGE ====================
+// ==================== EDUCATION & LANGUAGE ANIMATIONS ====================
+function setupEducationLanguageAnimations() {
+    const fadeElements = document.querySelectorAll('.education-column .timeline-card, .language-item');
+
+    const observerOptions = {
+        threshold: 0.2,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('show');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    fadeElements.forEach(el => {
+        el.classList.add('fade-in');
+        observer.observe(el);
+    });
+}
+
+// ==================== LANGUAGE LEVEL PROGRESS ====================
+function setupLanguageProgressBars() {
+    const languageLevels = {
+        'Beginner': 20,
+        'Elementary': 40,
+        'Pre-Intermediate': 55,
+        'Intermediate': 70,
+        'Advanced': 85,
+        'Native': 100
+    };
+
+    document.querySelectorAll('.language-item').forEach(item => {
+        const levelText = item.querySelector('.language-level')?.textContent?.trim();
+        const levelPercent = languageLevels[levelText] || 0;
+
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'language-progress';
+
+        const progressBar = document.createElement('div');
+        progressBar.className = 'language-progress-bar';
+        progressBar.style.width = '0%';
+
+        progressContainer.appendChild(progressBar);
+        item.appendChild(progressContainer);
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    progressBar.style.width = `${levelPercent}%`;
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(item);
+    });
+}
+
+// ==================== INITIALIZE ALL FUNCTIONS ====================
 document.addEventListener('DOMContentLoaded', () => {
-    console.log(
-        '%c👋 Assalomu alaykum! Portfolio saytimga xush kelibsiz!',
-        'color: #3b82f6; font-size: 20px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);'
-    );
-    console.log(
-        '%c🚀 Python Backend Developer',
-        'color: #8b5cf6; font-size: 16px; font-weight: 600;'
-    );
-    console.log(
-        '%c💼 Portfolio loyihasi Django bilan yaratilgan',
-        'color: #10b981; font-size: 14px;'
-    );
+    setupEducationLanguageAnimations();
+    setupLanguageProgressBars();
+
+    // Console welcome message
+    console.log('%c👋 Assalomu alaykum! Portfolio saytimga xush kelibsiz!', 'color: #3b82f6; font-size: 20px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);');
+    console.log('%c🚀 Python Backend Developer', 'color: #8b5cf6; font-size: 16px; font-weight: 600;');
+    console.log('%c💼 Portfolio loyihasi Django bilan yaratilgan', 'color: #10b981; font-size: 14px;');
+    console.log('✅ Portfolio script successfully loaded!');
 });
 
-console.log('✅ Portfolio script successfully loaded!');
+// ==================== TYPING EFFECT FOR HERO TITLE (OPTIONAL) ====================
+function typeWriter(element, text, speed = 100) {
+    let i = 0;
+    element.textContent = '';
+
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+
+    type();
+}
+
+// Uncomment to enable typing effect
+// const heroTitle = document.querySelector('.hero-title');
+// if (heroTitle) {
+//     const originalText = heroTitle.textContent;
+//     typeWriter(heroTitle, originalText, 50);
+// }
+
+// ==================== SMOOTH REVEAL ON SCROLL ====================
+function revealOnScroll() {
+    const reveals = document.querySelectorAll('.fade-in');
+
+    reveals.forEach(reveal => {
+        const windowHeight = window.innerHeight;
+        const revealTop = reveal.getBoundingClientRect().top;
+        const revealPoint = 150;
+
+        if (revealTop < windowHeight - revealPoint) {
+            reveal.classList.add('show');
+        }
+    });
+}
+
+window.addEventListener('scroll', revealOnScroll);
+
+// ==================== THEME TOGGLE (OPTIONAL) ====================
+function createThemeToggle() {
+    // Bu funksiyani kerak bo'lsa ishlatish mumkin
+    const theme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+}
+
+// createThemeToggle();
+
+// ==================== END OF SCRIPT ====================
+console.log('📱 Mobile responsive: ✅');
+console.log('🎨 Animations: ✅');
+console.log('⚡ Performance optimized: ✅');
+console.log('🔧 All features loaded successfully!');

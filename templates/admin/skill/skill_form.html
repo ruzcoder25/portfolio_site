@@ -2,19 +2,413 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <title>{% if form.instance.pk %}Ko‘nikmani tahrirlash{% else %}Yangi ko‘nikma{% endif %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if form.instance.pk %}Ko'nikmani tahrirlash{% else %}Yangi ko'nikma{% endif %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --text-color: #333;
+            --text-light: #777;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        .skill-form-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 30px 0;
+        }
+
+        .skill-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .skill-form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .skill-form-header h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .skill-form-header h1 i {
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            color: white;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .form-card-header {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            padding: 25px;
+            position: relative;
+        }
+
+        .form-card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-card-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: #f8f9fa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            flex: 1;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+            color: white;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(46, 204, 113, 0.4);
+            background: linear-gradient(135deg, #27ae60, #219653);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+            box-shadow: 0 4px 12px rgba(149, 165, 166, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(149, 165, 166, 0.4);
+            background: linear-gradient(135deg, #7f8c8d, #6c7b7d);
+            color: white;
+        }
+
+        /* Error styles */
+        .errorlist {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 0;
+        }
+
+        .errorlist li {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .errorlist li:before {
+            content: '⚠️';
+            font-size: 0.8rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .skill-form-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .skill-form-container {
+                padding: 0 15px;
+            }
+
+            .skill-form-header {
+                padding: 20px;
+            }
+
+            .skill-form-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-card-body {
+                padding: 25px 20px;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-primary {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
 </head>
 <body>
+    <section class="skill-form-section">
+        <div class="skill-form-container">
 
-<h1>{% if form.instance.pk %}Ko‘nikmani tahrirlash{% else %}Yangi ko‘nikma qo‘shish{% endif %}</h1>
+            <!-- Form Header -->
+            <div class="skill-form-header">
+                <h1>
+                    <i class="fas fa-{% if form.instance.pk %}edit{% else %}plus{% endif %}"></i>
+                    {% if form.instance.pk %}Ko'nikmani tahrirlash{% else %}Yangi ko'nikma qo'shish{% endif %}
+                </h1>
+                <div class="header-actions">
+                    <a href="{% url 'skill_list' %}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i>
+                        Ro'yxatga qaytish
+                    </a>
+                </div>
+            </div>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">{% if form.instance.pk %}Saqlash{% else %}Qo‘shish{% endif %}</button>
-</form>
+            <!-- Form Card -->
+            <div class="form-card">
+                <div class="form-card-header">
+                    <h2>
+                        <i class="fas fa-code"></i>
+                        {% if form.instance.pk %}"{{ form.instance.name }}" ni tahrirlash{% else %}Yangi ko'nikma ma'lumotlari{% endif %}
+                    </h2>
+                </div>
 
-<p><a href="{% url 'skill_list' %}">⬅ Ro‘yxatga qaytish</a></p>
+                <div class="form-card-body">
+                    <form method="post">
+                        {% csrf_token %}
 
+                        <!-- Name Field -->
+                        <div class="form-group">
+                            <label for="id_name" class="form-label">
+                                <i class="fas fa-tag"></i>
+                                Ko'nikma nomi
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.name.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            <div class="form-text">Ko'nikmangizning to'liq nomini kiriting (masalan: Python, Django, React)</div>
+                        </div>
+
+                        <!-- Category Field -->
+                        <div class="form-group">
+                            <label for="id_category" class="form-label">
+                                <i class="fas fa-folder"></i>
+                                Toifa
+                            </label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.category.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            <div class="form-text">Ko'nikmangizning toifasini tanlang</div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-{% if form.instance.pk %}save{% else %}plus{% endif %}"></i>
+                                {% if form.instance.pk %}Saqlash{% else %}Qo'shish{% endif %}
+                            </button>
+                            <a href="{% url 'skill_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i>
+                                Bekor qilish
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form elementlariga class qo'shish
+            const nameField = document.querySelector('#id_name');
+            const categoryField = document.querySelector('#id_category');
+
+            if (nameField) {
+                nameField.className = 'form-control';
+                nameField.placeholder = 'Ko\'nikma nomini kiriting...';
+            }
+
+            if (categoryField) {
+                categoryField.className = 'form-select';
+            }
+        });
+    </script>
 </body>
 </html>

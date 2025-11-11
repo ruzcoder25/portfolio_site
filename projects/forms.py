@@ -1,6 +1,6 @@
 from django import forms
 from .models import Project
-from skill.models import Skill
+
 
 class ProjectForm(forms.ModelForm):
     class Meta:
@@ -13,7 +13,7 @@ class ProjectForm(forms.ModelForm):
             'skill',
             'project_type',
             'work_type',
-            'order',
+
         ]
         widgets = {
             'project_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Loyiha nomi'}),
@@ -23,6 +23,6 @@ class ProjectForm(forms.ModelForm):
             'skill': forms.SelectMultiple(attrs={'class': 'form-control'}),
             'project_type': forms.Select(attrs={'class': 'form-control'}),
             'work_type': forms.Select(attrs={'class': 'form-control'}),
-            'order': forms.NumberInput(attrs={'class': 'form-control'}),
+
         }
 

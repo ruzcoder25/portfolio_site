@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, ProfileForm, LoginForm
 
+
 def login_admin(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -15,18 +16,20 @@ def login_admin(request):
                 login(request, user)
                 return redirect('dashboard')
             else:
-                form.add_error(None, "Email yoki parol noto‘g‘ri!")
+                form.add_error(None, "Email yoki parol noto'g'ri!")
     else:
         form = LoginForm()
 
     return render(request, 'account/login.html', {'form': form})
 
+
 @login_required
 def profile(request):
-    # Foydalanuvchi o‘z profilini ko‘radi
+    # Foydalanuvchi o'z profilini ko'radi
     user = request.user
     context = {'user': user}
     return render(request, 'admin/profile/profile.html', context)
+
 
 @login_required
 def update_profile(request):
@@ -35,14 +38,24 @@ def update_profile(request):
     if request.method == 'POST':
         form = UserUpdateForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
+            # Clear so'rovlarini signalga yuborish
+            if request.POST.get('clear_profile_image') == 'true':
+                user._clear_profile_image = True
+
+            if request.POST.get('clear_resume_file') == 'true':
+                user._clear_resume_file = True
+
+            # Formani saqlash
             form.save()
             messages.success(request, "Profil muvaffaqiyatli yangilandi")
             return redirect('profile')
         else:
-            messages.error(request, "Ma'lumotlarni tekshirib qayta urinib ko‘ring")
+            messages.error(request, "Ma'lumotlarni tekshirib qayta urinib ko'ring")
     else:
         form = UserUpdateForm(instance=user)
+
     return render(request, 'admin/profile/update_profile.html', {'form': form})
+
 
 @login_required
 def logout_user(request):

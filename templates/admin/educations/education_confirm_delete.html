@@ -1,8 +1,238 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma'lumotni o'chirish</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .delete-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+        }
 
-<h3>Ma'lumotni o'chirish</h3>
-<p>Haqiqatan ham "{{ object }}" ni o'chirmoqchimisiz?</p>
-<form method="POST">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Ha, o'chirish</button>
-    <a href="{% url 'education_list' %}" class="btn btn-secondary">Bekor qilish</a>
-</form>
+        .delete-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .delete-header {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        .delete-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .warning-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .delete-header h4 {
+            font-weight: 700;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .delete-body {
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+
+        .object-name {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #f39c12;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            font-weight: 700;
+            color: #e67e22;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.2);
+        }
+
+        .warning-text {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .delete-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+            box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #7f8c8d, #6c7a7d);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(149, 165, 166, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .icon-spin {
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 576px) {
+            .delete-container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            .delete-header {
+                padding: 20px;
+            }
+
+            .delete-body {
+                padding: 25px 20px;
+            }
+
+            .delete-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .warning-icon {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="delete-container">
+        <div class="card delete-card">
+            <div class="delete-header">
+                <div class="warning-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <h4 class="mb-0">Ma'lumotni o'chirish</h4>
+            </div>
+
+            <div class="delete-body">
+                <p class="mb-3">Quyidagi ma'lumotni o'chirishni tasdiqlaysizmi?</p>
+
+                <div class="object-name">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    {{ object }}
+                </div>
+
+                <p class="warning-text">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Bu amalni ortga qaytarib bo'lmaydi. Ma'lumot butunlay o'chib ketadi.
+                </p>
+
+                <form method="POST" id="deleteForm">
+                    {% csrf_token %}
+                    <div class="delete-actions">
+                        <button type="submit" class="btn btn-danger" id="deleteBtn">
+                            <i class="fas fa-trash me-2"></i>
+                            <span>O'chirish</span>
+                            <i class="fas fa-spinner icon-spin ms-2"></i>
+                        </button>
+                        <a href="{% url 'education_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>
+                            Bekor qilish
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteForm = document.getElementById('deleteForm');
+            const deleteBtn = document.getElementById('deleteBtn');
+            const deleteText = deleteBtn.querySelector('span');
+            const spinner = deleteBtn.querySelector('.icon-spin');
+            const trashIcon = deleteBtn.querySelector('.fa-trash');
+
+            deleteForm.addEventListener('submit', function(e) {
+                // Loading holatini ko'rsatish
+                deleteText.textContent = 'O\'chirilmoqda...';
+                trashIcon.style.display = 'none';
+                spinner.style.display = 'inline-block';
+                deleteBtn.disabled = true;
+
+                // Formni tezda submit qilish
+                setTimeout(() => {
+                    deleteForm.submit();
+                }, 500);
+            });
+
+            // Escape tugmasi bilan bekor qilish
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    window.location.href = "{% url 'education_list' %}";
+                }
+            });
+
+            // Button focus
+            deleteBtn.focus();
+        });
+    </script>
+</body>
+</html>

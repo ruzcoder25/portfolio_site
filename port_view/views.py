@@ -1,42 +1,100 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from account.models import CustomUser
 from education.models import Education
 from language.models import Language
 from skill.models import Skill
 from projects.models import Project
 
+
 def home(request):
-    user = CustomUser.objects.first()
+    """
+    Portfolio asosiy sahifasi
+    Faqat ma'lumotlar mavjud bo'lgandagina ko'rsatadi
+    """
+    # Birinchi foydalanuvchini olish (yoki request.user ni ishlatish mumkin)
+    try:
+        user = CustomUser.objects.first()
+        if not user:
+            # Agar foydalanuvchi bo'lmasa, xato sahifasini ko'rsatish
+            return render(request, 'error.html', {
+                'error_message': 'Foydalanuvchi topilmadi'
+            })
+    except CustomUser.DoesNotExist:
+        return render(request, 'error.html', {
+            'error_message': 'Foydalanuvchi topilmadi'
+        })
 
-    # Education
-    educations = Education.objects.filter(user=user).order_by('start_year')
+    # Education - faqat mavjud bo'lsagina
+    educations = Education.objects.filter(user=user).order_by('-start_year')
 
-    # Language
-    languages = Language.objects.filter(user=user)
+    # Language - faqat mavjud bo'lsagina
+    languages = Language.objects.filter(user=user).order_by('level')
 
     # Skills: category bo'yicha guruhlash
     CATEGORY_ORDER = ['programming', 'database', 'framework', 'devops', 'other']
-    skill_categories = []
+    CATEGORY_NAMES = {
+        'programming': 'Dasturlash tillari',
+        'database': 'Ma\'lumotlar bazasi',
+        'framework': 'Framework va kutubxonalar',
+        'devops': 'DevOps vositalari',
+        'other': 'Boshqa ko\'nikmalar'
+    }
 
+    skill_categories = []
     for category in CATEGORY_ORDER:
         skills = Skill.objects.filter(category=category)
         if skills.exists():
             skill_categories.append({
                 'name': category,
-                'display_name': dict(Skill.CATEGORY_CHOICES)[category],
+                'display_name': CATEGORY_NAMES.get(category, category),
                 'skills': skills
             })
 
-    # Projects
-    real_projects = Project.objects.filter(user=user, project_type='real').order_by('-created_at')
-    practice_projects = Project.objects.filter(user=user, project_type='practice').order_by('-created_at')
+    # Projects - turi bo'yicha ajratish
+    real_projects = Project.objects.filter(
+        user=user,
+        project_type='real'
+    ).order_by('-created_at')
+
+    practice_projects = Project.objects.filter(
+        user=user,
+        project_type='practice'
+    ).order_by('-created_at')
 
     context = {
         'user': user,
-        'educations': educations,
-        'languages': languages,
-        'skill_categories': skill_categories,
-        'real_projects': real_projects,
-        'practice_projects': practice_projects,
+        'educations': educations if educations.exists() else None,
+        'languages': languages if languages.exists() else None,
+        'skill_categories': skill_categories if skill_categories else None,
+        'real_projects': real_projects if real_projects.exists() else None,
+        'practice_projects': practice_projects if practice_projects.exists() else None,
+        'has_education_or_languages': educations.exists() or languages.exists(),
     }
+
     return render(request, 'base.html', context)
+
+
+@login_required
+def dashboard_view(request):
+    """
+    Dashboard - faqat login qilgan foydalanuvchilar uchun
+    """
+    user = request.user
+
+    # Statistikalar
+    stats = {
+        'total_education': Education.objects.filter(user=user).count(),
+        'total_languages': Language.objects.filter(user=user).count(),
+        'total_skills': Skill.objects.count(),
+        'total_projects': Project.objects.filter(user=user).count(),
+        'real_projects': Project.objects.filter(user=user, project_type='real').count(),
+        'practice_projects': Project.objects.filter(user=user, project_type='practice').count(),
+    }
+
+    context = {
+        'user': user,
+        'stats': stats,
+    }
+
+    return render(request, 'dashboard.html', context)

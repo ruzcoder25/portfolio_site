@@ -4,54 +4,553 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tillar ro'yxati</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .btn { padding: 4px 8px; text-decoration: none; border-radius: 4px; color: white; }
-        .btn-update { background-color: #ffc107; }
-        .btn-delete { background-color: #dc3545; }
-        .btn-add { background-color: #28a745; margin-bottom: 10px; display: inline-block; }
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --text-color: #333;
+            --text-light: #777;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        .languages-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 30px 0;
+        }
+
+        .languages-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .languages-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .languages-header h2 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .languages-header h2 i {
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(46, 204, 113, 0.4);
+            background: linear-gradient(135deg, #27ae60, #219653);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            color: white;
+        }
+
+        /* Enhanced Table Styles */
+        .languages-table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .table {
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            border: none;
+            padding: 18px 16px;
+            font-weight: 600;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .table thead th:first-child {
+            border-top-left-radius: var(--border-radius);
+        }
+
+        .table thead th:last-child {
+            border-top-right-radius: var(--border-radius);
+        }
+
+        .table tbody tr {
+            transition: var(--transition);
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .table tbody td {
+            padding: 16px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+            font-size: 0.95rem;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Language name styling */
+        .language-cell {
+            font-weight: 600;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .language-cell i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        /* Level badge styling */
+        .level-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .level-badge.beginner {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .level-badge.intermediate {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .level-badge.advanced {
+            background: linear-gradient(135deg, #27ae60, #219653);
+            color: white;
+        }
+
+        .level-badge.native {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+
+        .level-badge.fluent {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+            color: white;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--light-color);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h4 {
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            max-width: 400px;
+            margin: 0 auto 20px;
+        }
+
+        /* Statistics cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .stat-icon.languages {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+        }
+
+        .stat-icon.levels {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+        }
+
+        .stat-icon.native {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+        }
+
+        .stat-info h4 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+
+        .stat-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .languages-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .table-responsive {
+                border-radius: var(--border-radius);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-danger {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .languages-container {
+                padding: 0 15px;
+            }
+
+            .languages-header {
+                padding: 20px;
+            }
+
+            .languages-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-success, .btn-info {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .table thead th {
+                padding: 14px 12px;
+                font-size: 0.9rem;
+            }
+
+            .table tbody td {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .table tbody tr {
+            animation: fadeIn 0.5s ease-out;
+        }
     </style>
 </head>
 <body>
-    <h2>Tillar ro'yxati</h2>
+    <section class="languages-section">
+        <div class="languages-container">
 
-    {% if request.user.is_staff %}
-    <a href="{% url 'language_add' %}" class="btn btn-add">➕ Yangi til qo'shish</a>
-    {% endif %}
 
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Til nomi</th>
-                <th>Daraja</th>
-                {% if request.user.is_staff %}
-                <th>Amallar</th>
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for lang in languages %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ lang.name }}</td>
-                <td>{{ lang.get_level_display }}</td>
-                {% if request.user.is_staff %}
-                <td>
-                    <a href="{% url 'language_edit' lang.pk %}" class="btn btn-update">Tahrirlash</a>
-                    <a href="{% url 'language_delete' lang.pk %}" class="btn btn-delete">O‘chirish</a>
-                </td>
-                {% endif %}
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="{% if request.user.is_staff %}4{% else %}3{% endif %}">Hech qanday til qo‘shilmagan.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            <!-- Languages Header -->
+            <div class="languages-header">
+                <h2><i class="fas fa-language"></i> Tillar ro'yxati</h2>
+                <div class="header-actions">
+                    <a href="{% url 'dashboard' %}" class="btn btn-info">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                    {% if request.user.is_staff %}
+                    <a href="{% url 'language_add' %}" class="btn btn-success">
+                        <i class="fas fa-plus"></i>
+                        Yangi til qo'shish
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Languages Table -->
+            <div class="languages-table-container">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Til nomi</th>
+                                <th>Daraja</th>
+                                {% if request.user.is_staff %}
+                                <th>Amallar</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lang in languages %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>
+                                    <div class="language-cell">
+                                        <i class="fas fa-language"></i>
+                                        {{ lang.name }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if "ona" in lang.get_level_display.lower or "native" in lang.get_level_display.lower %}
+                                        <span class="level-badge native">{{ lang.get_level_display }}</span>
+                                    {% elif "yuqori" in lang.get_level_display.lower or "advanced" in lang.get_level_display.lower %}
+                                        <span class="level-badge advanced">{{ lang.get_level_display }}</span>
+                                    {% elif "o'rta" in lang.get_level_display.lower or "intermediate" in lang.get_level_display.lower %}
+                                        <span class="level-badge intermediate">{{ lang.get_level_display }}</span>
+                                    {% elif "boshlang'ich" in lang.get_level_display.lower or "beginner" in lang.get_level_display.lower %}
+                                        <span class="level-badge beginner">{{ lang.get_level_display }}</span>
+                                    {% else %}
+                                        <span class="level-badge fluent">{{ lang.get_level_display }}</span>
+                                    {% endif %}
+                                </td>
+                                {% if request.user.is_staff %}
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="{% url 'language_edit' lang.pk %}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                            Tahrirlash
+                                        </a>
+                                        <a href="{% url 'language_delete' lang.pk %}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                            O'chirish
+                                        </a>
+                                    </div>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="{% if request.user.is_staff %}4{% else %}3{% endif %}">
+                                    <div class="empty-state">
+                                        <i class="fas fa-language"></i>
+                                        <h4>Hech qanday til qo'shilmagan</h4>
+                                        <p>Hali hech qanday til ma'lumotlari qo'shilmagan</p>
+                                        {% if request.user.is_staff %}
+                                        <a href="{% url 'language_add' %}" class="btn btn-success">
+                                            <i class="fas fa-plus"></i>
+                                            Birinchi tilni qo'shish
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hover effektlari
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // O'chirish tugmasi uchun tasdiq
+            const deleteButtons = document.querySelectorAll('.btn-danger');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (!confirm('Bu tilni o\'chirishni istaysizmi?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
