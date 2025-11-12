@@ -25,7 +25,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -44,10 +44,14 @@ INSTALLED_APPS = [
     'language',
     'projects',
     'skill',
+    'port_view',
+    'dashboard',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -122,29 +126,32 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = 'Asia/Tashkent'
 USE_I18N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
-# Loyihadagi umumiy statik fayllar joyi (devda ishlatiladi)
+# ========================
+#   STATIC & MEDIA FILES
+# ========================
+STATIC_URL = '/static/'
+
+# Dev uchun — loyihangizdagi umumiy static papka
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / 'static',
 ]
 
-# Yig‘ilgan statik fayllar (collectstatic bu yerga joylaydi — prod uchun)
-STATIC_ROOT = BASE_DIR / "staticfiles"
+# Prod uchun — collectstatic shu yerga joylaydi
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Media fayllar (profil rasmlar, yuklangan fayllar)
+# Media fayllar (profil rasmlar va boshqalar)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = BASE_DIR / 'media'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
