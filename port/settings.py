@@ -160,3 +160,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
+# Sessiya vaqtini 5 daqiqa qilib sozlash
+SESSION_COOKIE_AGE = 300  # 5 daqiqa (sekundlarda)
+SESSION_SAVE_EVERY_REQUEST = True  # Har bir so'rovda sessiya muddatini yangilash
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Brauzer yopilganda sessiya tugashi

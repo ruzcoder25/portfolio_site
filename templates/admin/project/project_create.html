@@ -7,145 +7,70 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --success-color: #2ecc71;
-            --danger-color: #e74c3c;
-            --warning-color: #f39c12;
-            --light-color: #ecf0f1;
-            --dark-color: #34495e;
-            --text-color: #333;
-            --text-light: #777;
-            --border-radius: 12px;
-            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-
         .form-section {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             min-height: 100vh;
             padding: 30px 0;
         }
-
         .form-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 0 20px;
         }
-
         .form-card {
             background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-
         .form-header {
-            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
             padding: 25px 30px;
-            position: relative;
         }
-
-        .form-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .form-header h3 {
-            margin: 0;
-            font-size: 1.8rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .form-header h3 i {
-            font-size: 1.5rem;
-        }
-
         .form-body {
             padding: 30px;
         }
-
-        .form-group {
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--secondary-color);
-            font-size: 1rem;
-        }
-
-        .form-group .required::after {
-            content: ' *';
-            color: var(--danger-color);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
+        .skills-section {
             border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: var(--transition);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
             background: #f8f9fa;
         }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
+        .add-skill-section {
+            border: 2px dashed #3498db;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            background: #f0f8ff;
+        }
+        .skill-item {
             background: white;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-            outline: none;
-        }
-
-        .form-select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 12px center;
-            background-repeat: no-repeat;
-            background-size: 16px;
-            padding-right: 40px;
-        }
-
-        .form-text {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            margin-top: 6px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
             display: flex;
+            justify-content: between;
             align-items: center;
-            gap: 6px;
         }
-
-        .errorlist {
-            list-style: none;
-            padding: 0;
-            margin: 8px 0 0 0;
+        .skill-category {
+            font-size: 0.8rem;
+            color: #6c757d;
+            background: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 10px;
         }
-
-        .errorlist li {
-            color: var(--danger-color);
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 10px;
-            background: rgba(231, 76, 60, 0.1);
-            border-radius: 4px;
-            border-left: 3px solid var(--danger-color);
+        .skill-select-container {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            background: white;
         }
-
         .form-actions {
             display: flex;
             gap: 15px;
@@ -154,108 +79,27 @@
             border-top: 1px solid #e9ecef;
             flex-wrap: wrap;
         }
-
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             padding: 12px 24px;
             border: none;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), #2980b9);
-            color: white;
-            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.4);
-            background: linear-gradient(135deg, #2980b9, #2573a7);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #6c757d, #5a6268);
-            color: white;
-            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
-        }
-
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(108, 117, 125, 0.4);
-            background: linear-gradient(135deg, #5a6268, #495057);
-            color: white;
-            text-decoration: none;
-        }
-
-        .form-icon {
-            position: absolute;
-            right: 15px;
-            top: 38px;
-            color: var(--text-light);
-            font-size: 1.1rem;
-        }
-
-        .alert-success {
-            background: linear-gradient(135deg, var(--success-color), #27ae60);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            padding: 15px 20px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
-        }
-
-        .skill-select {
-            height: 150px !important;
-        }
-
-        .skill-option {
-            padding: 8px 12px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .skill-option:last-child {
-            border-bottom: none;
-        }
-
-        .no-skills-message {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
             border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            margin-bottom: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
-
-        .no-skills-message i {
-            color: #f39c12;
-            margin-bottom: 8px;
+        .btn-outline-success {
+            border: 2px solid #28a745;
+            color: #28a745;
+            background: transparent;
         }
-
+        .btn-outline-success:hover {
+            background: #28a745;
+            color: white;
+        }
         @media (max-width: 768px) {
-            .form-container {
-                padding: 0 15px;
-            }
-            .form-header {
-                padding: 20px 25px;
-            }
-            .form-header h3 {
-                font-size: 1.5rem;
-            }
-            .form-body {
-                padding: 25px;
-            }
             .form-actions {
                 flex-direction: column;
             }
@@ -264,21 +108,6 @@
                 justify-content: center;
             }
         }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .form-card {
-            animation: slideIn 0.5s ease-out;
-        }
     </style>
 </head>
 <body>
@@ -286,12 +115,10 @@
         <div class="form-container">
             {% if messages %}
                 {% for message in messages %}
-                    {% if message.tags == 'success' %}
-                    <div class="alert-success">
-                        <i class="fas fa-check-circle"></i>
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
                         {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                    {% endif %}
                 {% endfor %}
             {% endif %}
 
@@ -304,106 +131,121 @@
                 </div>
 
                 <div class="form-body">
+                    <!-- Yangi ko'nikma qo'shish bo'limi -->
+                    <div class="add-skill-section">
+                        <h5 class="mb-3">
+                            <i class="fas fa-plus-circle text-primary"></i>
+                            Yangi Ko'nikma Qo'shish
+                        </h5>
+                        <form method="POST" class="row g-3">
+                            {% csrf_token %}
+                            <div class="col-md-5">
+                                <label class="form-label">Ko'nikma Nomi</label>
+                                {{ skill_form.name }}
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label">Kategoriya</label>
+                                {{ skill_form.category }}
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" name="add_skill" class="btn btn-outline-success w-100">
+                                    <i class="fas fa-plus"></i>
+                                    Qo'shish
+                                </button>
+                            </div>
+                            {% if skill_form.errors %}
+                                <div class="col-12">
+                                    <div class="alert alert-danger">
+                                        {% for error in skill_form.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </form>
+                    </div>
+
+                    <!-- Mavjud ko'nikmalar -->
+                    <div class="skills-section">
+                        <h5 class="mb-3">
+                            <i class="fas fa-list text-success"></i>
+                            Mavjud Ko'nikmalar
+                            <span class="badge bg-primary ms-2">{{ user_skills.count }} ta</span>
+                        </h5>
+
+                        {% if user_skills %}
+                            <div class="skill-select-container">
+                                {% for skill in user_skills %}
+                                <div class="skill-item">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox"
+                                               name="skill" value="{{ skill.id }}"
+                                               id="skill_{{ skill.id }}"
+                                               {% if skill.id in form.skill.value %}checked{% endif %}>
+                                        <label class="form-check-label" for="skill_{{ skill.id }}">
+                                            {{ skill.name }}
+                                        </label>
+                                    </div>
+                                    <span class="skill-category">{{ skill.get_category_display }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="form-text mt-2">
+                                <i class="fas fa-info-circle"></i>
+                                Loyihada ishlatilgan ko'nikmalarni tanlang
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning text-center">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Hozircha hech qanday ko'nikma mavjud emas. Yuqorida yangi ko'nikma qo'shing.
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Asosiy loyiha formasi -->
                     <form method="POST">
                         {% csrf_token %}
 
+                        <!-- Boshqa form maydonlari (skill dan tashqari) -->
                         {% for field in form %}
-                        <div class="form-group">
-                            <label for="{{ field.id_for_label }}" class="{% if field.field.required %}required{% endif %}">
-                                {{ field.label }}
-                            </label>
+                            {% if field.name != 'skill' %}
+                            <div class="form-group mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}required{% endif %}">
+                                    {{ field.label }}
+                                </label>
 
-                            {% if field.name == 'project_type' or field.name == 'work_type' %}
-                                <select name="{{ field.name }}" id="{{ field.id_for_label }}"
-                                        class="form-control form-select {% if field.errors %}is-invalid{% endif %}">
-                                    <option value="">Tanlang</option>
-                                    {% for value, label in field.field.choices %}
-                                        {% if value %}
-                                        <option value="{{ value }}" {% if field.value == value %}selected{% endif %}>
-                                            {{ label }}
-                                        </option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                            {% elif field.name == 'skill' %}
-                                {% if field.field.queryset.exists %}
-                                    <select name="{{ field.name }}" id="{{ field.id_for_label }}"
-                                            multiple class="form-control skill-select {% if field.errors %}is-invalid{% endif %}">
-                                        {% for skill in field.field.queryset %}
-                                        <option value="{{ skill.id }}"
-                                                {% if skill.id in field.value %}selected{% endif %}
-                                                class="skill-option">
-                                            {{ skill.name }}
-                                        </option>
-                                        {% endfor %}
-                                    </select>
-                                    <div class="form-text">
+                                {{ field }}
+
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted">
                                         <i class="fas fa-info-circle"></i>
-                                        Bir nechta ko'nikmalarni tanlash uchun Ctrl (yoki Cmd) tugmasini bosib tanlang
-                                    </div>
-                                {% else %}
-                                    <div class="no-skills-message">
-                                        <i class="fas fa-exclamation-triangle fa-2x"></i>
-                                        <p><strong>Sizda hali hech qanday ko'nikma qo'shilmagan</strong></p>
-                                        <p class="mb-0">Loyihada ko'nikmalarni ishlatish uchun avval <a href="{% url 'skill_add' %}" class="alert-link">ko'nikma qo'shing</a></p>
+                                        {{ field.help_text }}
                                     </div>
                                 {% endif %}
-                            {% elif field.field.widget.input_type == 'textarea' %}
-                                <textarea name="{{ field.name }}" id="{{ field.id_for_label }}"
-                                       class="form-control {% if field.errors %}is-invalid{% endif %}"
-                                       placeholder="{{ field.field.widget.attrs.placeholder|default:field.label }}"
-                                       rows="4">{{ field.value|default:'' }}</textarea>
-                            {% else %}
-                                <input type="{{ field.field.widget.input_type }}"
-                                       name="{{ field.name }}"
-                                       id="{{ field.id_for_label }}"
-                                       class="form-control {% if field.errors %}is-invalid{% endif %}"
-                                       value="{{ field.value|default:'' }}"
-                                       placeholder="{{ field.field.widget.attrs.placeholder|default:field.label }}">
-                            {% endif %}
 
-                            {% if field.help_text %}
-                                <div class="form-text">
-                                    <i class="fas fa-info-circle"></i>
-                                    {{ field.help_text }}
-                                </div>
+                                {% if field.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in field.errors %}
+                                            <i class="fas fa-exclamation-circle"></i> {{ error }}<br>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
                             {% endif %}
-
-                            {% if field.errors %}
-                                <ul class="errorlist">
-                                    {% for error in field.errors %}
-                                        <li><i class="fas fa-exclamation-circle"></i>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-
-                            {% if field.name == 'project_name' %}
-                                <i class="form-icon fas fa-project-diagram"></i>
-                            {% elif field.name == 'description' %}
-                                <i class="form-icon fas fa-file-alt"></i>
-                            {% elif field.name == 'github_link_project' %}
-                                <i class="form-icon fab fa-github"></i>
-                            {% elif field.name == 'live_link' %}
-                                <i class="form-icon fas fa-external-link-alt"></i>
-                            {% elif field.name == 'skill' %}
-                                <i class="form-icon fas fa-code"></i>
-                            {% elif field.name == 'project_type' %}
-                                <i class="form-icon fas fa-tag"></i>
-                            {% elif field.name == 'work_type' %}
-                                <i class="form-icon fas fa-briefcase"></i>
-
-                            {% endif %}
-                        </div>
                         {% endfor %}
 
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i>
-                                Saqlash
+                                {% if object %}Yangilash{% else %}Yaratish{% endif %}
                             </button>
                             <a href="{% url 'project_list' %}" class="btn btn-secondary">
                                 <i class="fas fa-times"></i>
                                 Bekor qilish
+                            </a>
+                            <a href="{% url 'skill_list' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-cog"></i>
+                                Ko'nikmalarni Boshqarish
                             </a>
                         </div>
                     </form>
@@ -415,72 +257,40 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Real-time validation
-            const formControls = document.querySelectorAll('.form-control');
+            // Checkbox larni multiple select ga aylantirish
+            const checkboxes = document.querySelectorAll('input[name="skill"]');
+            const originalSelect = document.querySelector('select[name="skill"]');
 
-            formControls.forEach(control => {
-                control.addEventListener('blur', function() {
-                    if (this.value.trim() === '' && this.hasAttribute('required')) {
-                        this.classList.add('is-invalid');
-                    } else {
-                        this.classList.remove('is-invalid');
-                    }
-                });
+            // Agar original select mavjud bo'lsa, yashirish
+            if (originalSelect) {
+                originalSelect.style.display = 'none';
+            }
 
-                control.addEventListener('input', function() {
-                    if (this.value.trim() !== '') {
-                        this.classList.remove('is-invalid');
-                    }
+            // Checkbox lar o'zgarganda original select ni yangilash
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateSkillSelect();
                 });
             });
 
-            // Form submission enhancement
-            const form = document.querySelector('form');
-            form.addEventListener('submit', function(e) {
-                let isValid = true;
-                const requiredFields = document.querySelectorAll('.form-control[required]');
-
-                requiredFields.forEach(field => {
-                    if (field.value.trim() === '') {
-                        field.classList.add('is-invalid');
-                        isValid = false;
+            function updateSkillSelect() {
+                const selectedSkills = [];
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedSkills.push(checkbox.value);
                     }
                 });
 
-                if (!isValid) {
-                    e.preventDefault();
-                    const firstError = document.querySelector('.is-invalid');
-                    if (firstError) {
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        firstError.focus();
-                    }
-                }
-            });
-
-            // Auto-focus first field
-            const firstField = document.querySelector('.form-control');
-            if (firstField) {
-                firstField.focus();
-            }
-
-            // Skill select uchun qo'shimcha funksionallik
-            const skillSelect = document.querySelector('.skill-select');
-            if (skillSelect) {
-                skillSelect.addEventListener('change', function() {
-                    const selectedCount = Array.from(this.selectedOptions).length;
-                    const helpText = this.parentElement.querySelector('.form-text');
-                    if (helpText) {
-                        helpText.innerHTML = `<i class="fas fa-info-circle"></i> ${selectedCount} ta ko'nikma tanlandi. Bir nechta tanlash uchun Ctrl (yoki Cmd) tugmasini bosib tanlang`;
-                    }
-                });
-
-                // Boshlang'ich tanlanganlar sonini ko'rsatish
-                const initialSelectedCount = Array.from(skillSelect.selectedOptions).length;
-                const helpText = skillSelect.parentElement.querySelector('.form-text');
-                if (helpText && initialSelectedCount > 0) {
-                    helpText.innerHTML = `<i class="fas fa-info-circle"></i> ${initialSelectedCount} ta ko'nikma tanlandi. Bir nechta tanlash uchun Ctrl (yoki Cmd) tugmasini bosib tanlang`;
+                // Original select ni yangilash
+                if (originalSelect) {
+                    Array.from(originalSelect.options).forEach(option => {
+                        option.selected = selectedSkills.includes(option.value);
+                    });
                 }
             }
+
+            // Sahifa yuklanganda tanlangan ko'nikmalarni ko'rsatish
+            updateSkillSelect();
         });
     </script>
 </body>

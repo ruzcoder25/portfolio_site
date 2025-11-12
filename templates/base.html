@@ -4,18 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ user.full_name }} - {{ user.specialization }}">
-    <meta name="keywords" content="Python, Django, Backend Developer, {{ user.full_name }}">
-    <meta name="author" content="{{ user.full_name }}">
-    <title>{{ user.full_name }} - Portfolio</title>
+    <meta name="description" content="{% if user.full_name %}{{ user.full_name }} - {{ user.specialization|default:'Developer' }}{% else %}Portfolio{% endif %}">
+    <meta name="keywords" content="Python, Django, Backend Developer{% if user.full_name %}, {{ user.full_name }}{% endif %}">
+    <meta name="author" content="{% if user.full_name %}{{ user.full_name }}{% else %}Developer{% endif %}">
+    <title>{% if user.full_name %}{{ user.full_name }} - Portfolio{% else %}Portfolio{% endif %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <div class="nav-content">
-                <a href="#home" class="logo">{{ user.full_name|slice:":2"|upper }}.dev</a>
+                <a href="{% if not request.user.is_authenticated %}{% url 'login_admin' %}{% else %}#{% endif %}"
+                   class="logo"
+                   {% if request.user.is_authenticated %}onclick="return false;"{% endif %}>
+                    {% if user.full_name %}{{ user.full_name|slice:":2"|upper }}.dev{% else %}PD.dev{% endif %}
+                </a>
 
                 <div class="nav-menu" id="navMenu">
                     <a href="#home" class="nav-link">Bosh sahifa</a>
@@ -30,7 +35,7 @@
                     {% endif %}
                     <a href="#contact" class="nav-link">Bog'lanish</a>
                     {% if request.user.is_authenticated %}
-                    <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+                        <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
                     {% endif %}
                 </div>
 
@@ -50,18 +55,37 @@
                 <!-- Left Side - Content -->
                 <div class="hero-content">
                     <div class="greeting">Assalomu alaykum, men</div>
-                    <h1 class="hero-name">{{ user.full_name }}</h1>
-                    <h2 class="hero-title">{{ user.specialization }}</h2>
+                    <h1 class="hero-name">
+                        {% if user.full_name %}
+                            {{ user.full_name }}
+                        {% else %}
+                            Ism Familiya
+                        {% endif %}
+                    </h1>
+                    <h2 class="hero-title">
+                        {% if user.specialization %}
+                            {{ user.specialization }}
+                        {% else %}
+                            {% if request.user.is_authenticated %}
+                                <a href="{% url 'dashboard' %}" style="color: inherit; text-decoration: none;">
+                                    Profilingizni to'ldiring
+                                </a>
+                            {% else %}
+                                Backend Developer
+                            {% endif %}
+                        {% endif %}
+                    </h2>
 
                     <div class="hero-buttons">
                         {% if user.resume_file %}
                         <a href="{{ user.resume_file.url }}" download class="btn btn-primary">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
+                            <i class="fas fa-download"></i>
                             Resume
+                        </a>
+                        {% elif request.user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="btn btn-primary">
+                            <i class="fas fa-arrow-right"></i>
+                            Resume qo'shish
                         </a>
                         {% endif %}
                         <a href="#contact" class="btn btn-secondary">Bog'lanish</a>
@@ -70,24 +94,22 @@
                     <div class="social-links">
                         {% if user.github_link %}
                         <a href="{{ user.github_link }}" target="_blank" class="social-link" title="GitHub">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
+                            <i class="fab fa-github"></i>
                         </a>
                         {% endif %}
                         {% if user.linkedin_link %}
                         <a href="{{ user.linkedin_link }}" target="_blank" class="social-link" title="LinkedIn">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                            </svg>
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        {% endif %}
+                        {% if user.telegram %}
+                        <a href="https://t.me/{{ user.telegram }}" target="_blank" class="social-link" title="Telegram">
+                            <i class="fab fa-telegram"></i>
                         </a>
                         {% endif %}
                         {% if user.email %}
                         <a href="mailto:{{ user.email }}" class="social-link" title="Email">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
+                            <i class="fas fa-envelope"></i>
                         </a>
                         {% endif %}
                     </div>
@@ -96,10 +118,22 @@
                 <!-- Right Side - Image -->
                 <div class="hero-image">
                     {% if user.profile_image %}
-                        <img src="{{ user.profile_image.url }}" alt="{{ user.full_name }}" class="profile-img">
+                        <img src="{{ user.profile_image.url }}" alt="{{ user.full_name|default:'User' }}" class="profile-img">
                     {% else %}
                         <div class="profile-placeholder">
-                            <span>{{ user.full_name|slice:":1"|upper }}</span>
+                            <span>
+                                {% if user.full_name %}
+                                    {{ user.full_name|slice:":1"|upper }}
+                                {% else %}
+                                    {% if request.user.is_authenticated %}
+                                        <a href="{% url 'dashboard' %}" style="color: inherit; text-decoration: none;">
+                                            P
+                                        </a>
+                                    {% else %}
+                                        U
+                                    {% endif %}
+                                {% endif %}
+                            </span>
                         </div>
                     {% endif %}
                     <div class="image-bg"></div>
@@ -109,9 +143,7 @@
     </section>
 
     <!-- Education and Languages Section -->
-
     {% if has_education_or_languages %}
-
     <section id="education-languages" class="about">
         <div class="container fade-in">
             <h2 class="section-title">Ta'lim va Tillar</h2>
@@ -120,17 +152,13 @@
 
                 <!-- Education -->
                 {% if educations %}
-
                 <div class="education-column">
-                    <h3 class="sub-section-title">🎓 Ta'lim</h3>
+                    <h3 class="sub-section-title"><i class="fas fa-graduation-cap"></i> Ta'lim</h3>
                     <div class="education-timeline">
                         {% for edu in educations %}
                         <div class="timeline-card">
                             <div class="timeline-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                                </svg>
+                                <i class="fas fa-university"></i>
                             </div>
                             <div class="timeline-card-content">
                                 <div class="timeline-date">{{ edu.start_year }} - {{ edu.end_year }}</div>
@@ -142,19 +170,31 @@
                         {% endfor %}
                     </div>
                 </div>
+                {% else %}
+                <!-- Hech qanday ta'lim ma'lumoti yo'q -->
+                <div class="education-column">
+                    <h3 class="sub-section-title"><i class="fas fa-graduation-cap"></i> Ta'lim</h3>
+                    <div class="no-data-message">
+                        <i class="fas fa-graduation-cap fa-3x"></i>
+                        <h4>Hali ta'lim ma'lumotlari qo'shilmagan</h4>
+                        {% if request.user.is_authenticated %}
+                        <p>Ta'lim ma'lumotlaringizni qo'shish uchun <a href="{% url 'dashboard' %}">dashboard</a> ga kiring</p>
+                        {% else %}
+                        <p>Ma'lumotlar tez orada qo'shiladi</p>
+                        {% endif %}
+                    </div>
+                </div>
                 {% endif %}
 
                 <!-- Languages -->
                 {% if languages %}
                 <div class="language-column">
-                    <h3 class="sub-section-title">🗣️ Tillar</h3>
+                    <h3 class="sub-section-title"><i class="fas fa-language"></i> Tillar</h3>
                     <div class="language-list">
                         {% for lang in languages %}
                         <div class="language-item">
                             <div class="language-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M12 3v18m9-9H3"/>
-                                </svg>
+                                <i class="fas fa-globe"></i>
                             </div>
                             <div class="language-info">
                                 <span class="language-name">{{ lang.name }}</span>
@@ -162,6 +202,20 @@
                             </div>
                         </div>
                         {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <!-- Hech qanday til ma'lumoti yo'q -->
+                <div class="language-column">
+                    <h3 class="sub-section-title"><i class="fas fa-language"></i> Tillar</h3>
+                    <div class="no-data-message">
+                        <i class="fas fa-language fa-3x"></i>
+                        <h4>Hali til ma'lumotlari qo'shilmagan</h4>
+                        {% if request.user.is_authenticated %}
+                        <p>Til ma'lumotlaringizni qo'shish uchun <a href="{% url 'dashboard' %}">dashboard</a> ga kiring</p>
+                        {% else %}
+                        <p>Ma'lumotlar tez orada qo'shiladi</p>
+                        {% endif %}
                     </div>
                 </div>
                 {% endif %}
@@ -183,26 +237,15 @@
                     <h3 class="category-title">
                         <span class="category-icon">
                             {% if category.name == 'programming' %}
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="16 18 22 12 16 6"></polyline>
-                                <polyline points="8 6 2 12 8 18"></polyline>
-                            </svg>
+                                <i class="fas fa-code"></i>
                             {% elif category.name == 'database' %}
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
-                            </svg>
+                                <i class="fas fa-database"></i>
                             {% elif category.name == 'devops' %}
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
+                                <i class="fas fa-server"></i>
+                            {% elif category.name == 'framework' %}
+                                <i class="fas fa-cubes"></i>
                             {% else %}
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                            </svg>
+                                <i class="fas fa-tools"></i>
                             {% endif %}
                         </span>
                         {{ category.display_name }}
@@ -219,6 +262,26 @@
             </div>
         </div>
     </section>
+    {% else %}
+    <!-- Hech qanday ko'nikma yo'q -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">Texnik ko'nikmalar</h2>
+            <div class="no-data-section">
+                <i class="fas fa-code fa-3x"></i>
+                <h3>Hali ko'nikmalar qo'shilmagan</h3>
+                {% if request.user.is_authenticated %}
+                <p>Texnik ko'nikmalaringizni qo'shish uchun <a href="{% url 'dashboard' %}">dashboard</a> ga kiring</p>
+                <a href="{% url 'dashboard' %}" class="btn btn-primary">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard ga o'tish
+                </a>
+                {% else %}
+                <p>Ko'nikmalar tez orada qo'shiladi</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
     {% endif %}
 
     <!-- Projects Section -->
@@ -232,11 +295,7 @@
             {% if real_projects %}
             <div class="projects-section">
                 <h3 class="projects-section-title">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg>
+                    <i class="fas fa-briefcase"></i>
                     Real loyihalar
                 </h3>
                 <div class="projects-grid">
@@ -244,17 +303,12 @@
                     <div class="project-card">
                         <div class="project-header">
                             <div class="project-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                    <line x1="8" y1="21" x2="16" y2="21"></line>
-                                    <line x1="12" y1="17" x2="12" y2="21"></line>
-                                </svg>
+                                <i class="fas fa-laptop-code"></i>
                             </div>
                             <span class="work-type-badge badge-{{ project.work_type }}">
                                 {{ project.get_work_type_display }}
                             </span>
                         </div>
-
                         <h3 class="project-title">{{ project.project_name }}</h3>
                         <p class="project-description">{{ project.description }}</p>
 
@@ -269,33 +323,16 @@
                         </div>
                         {% endif %}
 
-                        {% if project.devops_tools.all %}
-                        <div class="tech-section">
-                            <h4 class="tech-title">DevOps:</h4>
-                            <div class="project-skills">
-                                {% for tool in project.devops_tools.all %}
-                                <span class="skill-badge devops-badge">{{ tool.name }}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-
                         <div class="project-links">
                             {% if project.github_link_project %}
                             <a href="{{ project.github_link_project }}" target="_blank" class="project-link">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                                </svg>
+                                <i class="fab fa-github"></i>
                                 GitHub
                             </a>
                             {% endif %}
                             {% if project.live_link %}
                             <a href="{{ project.live_link }}" target="_blank" class="project-link">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                    <polyline points="15 3 21 3 21 9"></polyline>
-                                    <line x1="10" y1="14" x2="21" y2="3"></line>
-                                </svg>
+                                <i class="fas fa-external-link-alt"></i>
                                 Live Demo
                             </a>
                             {% endif %}
@@ -310,10 +347,7 @@
             {% if practice_projects %}
             <div class="projects-section">
                 <h3 class="projects-section-title">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                    </svg>
+                    <i class="fas fa-flask"></i>
                     Tajriba loyihalari
                 </h3>
                 <div class="projects-grid">
@@ -321,17 +355,12 @@
                     <div class="project-card">
                         <div class="project-header">
                             <div class="project-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                    <line x1="8" y1="21" x2="16" y2="21"></line>
-                                    <line x1="12" y1="17" x2="12" y2="21"></line>
-                                </svg>
+                                <i class="fas fa-code"></i>
                             </div>
                             <span class="work-type-badge badge-{{ project.work_type }}">
                                 {{ project.get_work_type_display }}
                             </span>
                         </div>
-
                         <h3 class="project-title">{{ project.project_name }}</h3>
                         <p class="project-description">{{ project.description }}</p>
 
@@ -346,33 +375,16 @@
                         </div>
                         {% endif %}
 
-                        {% if project.devops_tools.all %}
-                        <div class="tech-section">
-                            <h4 class="tech-title">DevOps:</h4>
-                            <div class="project-skills">
-                                {% for tool in project.devops_tools.all %}
-                                <span class="skill-badge devops-badge">{{ tool.name }}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-
                         <div class="project-links">
                             {% if project.github_link_project %}
                             <a href="{{ project.github_link_project }}" target="_blank" class="project-link">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                                </svg>
+                                <i class="fab fa-github"></i>
                                 GitHub
                             </a>
                             {% endif %}
                             {% if project.live_link %}
                             <a href="{{ project.live_link }}" target="_blank" class="project-link">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                    <polyline points="15 3 21 3 21 9"></polyline>
-                                    <line x1="10" y1="14" x2="21" y2="3"></line>
-                                </svg>
+                                <i class="fas fa-external-link-alt"></i>
                                 Live Demo
                             </a>
                             {% endif %}
@@ -382,6 +394,26 @@
                 </div>
             </div>
             {% endif %}
+        </div>
+    </section>
+    {% else %}
+    <!-- Hech qanday loyiha yo'q -->
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2 class="section-title">Loyihalar</h2>
+            <div class="no-data-section">
+                <i class="fas fa-project-diagram fa-3x"></i>
+                <h3>Hali loyihalar qo'shilmagan</h3>
+                {% if request.user.is_authenticated %}
+                <p>Loyihalaringizni qo'shish uchun <a href="{% url 'dashboard' %}">dashboard</a> ga kiring</p>
+                <a href="{% url 'dashboard' %}" class="btn btn-primary">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard ga o'tish
+                </a>
+                {% else %}
+                <p>Loyihalar tez orada qo'shiladi</p>
+                {% endif %}
+            </div>
         </div>
     </section>
     {% endif %}
@@ -394,110 +426,192 @@
 
             <div class="contact-wrapper">
                 <div class="contact-cards">
+                    <!-- Email -->
                     {% if user.email %}
                     <a href="mailto:{{ user.email }}" class="contact-card-link">
                         <div class="contact-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
+                            <i class="fas fa-envelope"></i>
                         </div>
                         <div class="contact-details">
                             <h4>Email</h4>
                             <p>{{ user.email }}</p>
                         </div>
                     </a>
+                    {% else %}
+                    <div class="contact-card-link no-data">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p class="text-muted">Hali qo'shilmagan</p>
+                        </div>
+                    </div>
                     {% endif %}
 
+                    <!-- Telefon -->
                     {% if user.phone_number %}
                     <a href="tel:{{ user.phone_number }}" class="contact-card-link">
                         <div class="contact-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                            </svg>
+                            <i class="fas fa-phone"></i>
                         </div>
                         <div class="contact-details">
                             <h4>Telefon</h4>
                             <p>{{ user.phone_number }}</p>
                         </div>
                     </a>
+                    {% else %}
+                    <div class="contact-card-link no-data">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Telefon</h4>
+                            <p class="text-muted">Hali qo'shilmagan</p>
+                        </div>
+                    </div>
                     {% endif %}
 
+                    <!-- Joylashuv -->
                     {% if user.location %}
                     <div class="contact-card-link">
                         <div class="contact-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
+                            <i class="fas fa-map-marker-alt"></i>
                         </div>
                         <div class="contact-details">
                             <h4>Joylashuv</h4>
                             <p>{{ user.location }}</p>
                         </div>
                     </div>
+                    {% else %}
+                    <div class="contact-card-link no-data">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Joylashuv</h4>
+                            <p class="text-muted">Hali qo'shilmagan</p>
+                        </div>
+                    </div>
                     {% endif %}
 
+                    <!-- GitHub -->
                     {% if user.github_link %}
                     <a href="{{ user.github_link }}" target="_blank" class="contact-card-link">
                         <div class="contact-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
+                            <i class="fab fa-github"></i>
                         </div>
                         <div class="contact-details">
                             <h4>GitHub</h4>
-                            <p>{{ user.github_link|slice:"19:" }}</p>
+                            <p>{{ user.github_link|cut:"https://github.com/" }}</p>
                         </div>
                     </a>
+                    {% else %}
+                    <div class="contact-card-link no-data">
+                        <div class="contact-icon">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>GitHub</h4>
+                            <p class="text-muted">Hali qo'shilmagan</p>
+                        </div>
+                    </div>
                     {% endif %}
 
+                    <!-- LinkedIn -->
                     {% if user.linkedin_link %}
                     <a href="{{ user.linkedin_link }}" target="_blank" class="contact-card-link">
                         <div class="contact-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                            </svg>
+                            <i class="fab fa-linkedin"></i>
                         </div>
                         <div class="contact-details">
                             <h4>LinkedIn</h4>
                             <p>LinkedIn Profil</p>
                         </div>
                     </a>
+                    {% else %}
+                    <div class="contact-card-link no-data">
+                        <div class="contact-icon">
+                            <i class="fab fa-linkedin"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>LinkedIn</h4>
+                            <p class="text-muted">Hali qo'shilmagan</p>
+                        </div>
+                    </div>
                     {% endif %}
 
+                    <!-- Telegram -->
                     {% if user.telegram %}
                     <a href="https://t.me/{{ user.telegram }}" target="_blank" class="contact-card-link">
                         <div class="contact-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-                            </svg>
+                            <i class="fab fa-telegram"></i>
                         </div>
                         <div class="contact-details">
                             <h4>Telegram</h4>
                             <p>@{{ user.telegram }}</p>
                         </div>
                     </a>
+                    {% else %}
+                    <div class="contact-card-link no-data">
+                        <div class="contact-icon">
+                            <i class="fab fa-telegram"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Telegram</h4>
+                            <p class="text-muted">Hali qo'shilmagan</p>
+                        </div>
+                    </div>
                     {% endif %}
+                </div>
+
+                <!-- Social Media Links -->
+                <div class="social-media-section">
+                    <h4 class="social-title">Ijtimoiy tarmoqlar</h4>
+                    <div class="social-media-links">
+                        {% if user.github_link %}
+                        <a href="{{ user.github_link }}" target="_blank" class="social-media-link">
+                            <i class="fab fa-github"></i>
+                            <span>GitHub</span>
+                        </a>
+                        {% endif %}
+                        {% if user.linkedin_link %}
+                        <a href="{{ user.linkedin_link }}" target="_blank" class="social-media-link">
+                            <i class="fab fa-linkedin"></i>
+                            <span>LinkedIn</span>
+                        </a>
+                        {% endif %}
+                        {% if user.telegram %}
+                        <a href="https://t.me/{{ user.telegram }}" target="_blank" class="social-media-link">
+                            <i class="fab fa-telegram"></i>
+                            <span>Telegram</span>
+                        </a>
+                        {% endif %}
+                        {% if user.email %}
+                        <a href="mailto:{{ user.email }}" class="social-media-link">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email</span>
+                        </a>
+                        {% endif %}
+                    </div>
                 </div>
 
                 <div class="contact-cta">
                     {% if user.resume_file %}
                     <a href="{{ user.resume_file.url }}" download class="btn btn-primary btn-large">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
+                        <i class="fas fa-download"></i>
                         Resume yuklab olish
                     </a>
+                    {% elif request.user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary btn-large">
+                        <i class="fas fa-arrow-right"></i>
+                        Resume qo'shish
+                    </a>
                     {% endif %}
+
                     {% if user.email %}
                     <a href="mailto:{{ user.email }}" class="btn btn-secondary btn-large">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                            <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
+                        <i class="fas fa-paper-plane"></i>
                         Email yuborish
                     </a>
                     {% endif %}
@@ -509,10 +623,125 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 {{ user.full_name }}. Barcha huquqlar himoyalangan.</p>
+            <p>&copy; 2025 {% if user.full_name %}{{ user.full_name }}{% else %}Portfolio{% endif %}. Barcha huquqlar himoyalangan.</p>
+            <div class="footer-social">
+                {% if user.github_link %}
+                <a href="{{ user.github_link }}" target="_blank"><i class="fab fa-github"></i></a>
+                {% endif %}
+                {% if user.linkedin_link %}
+                <a href="{{ user.linkedin_link }}" target="_blank"><i class="fab fa-linkedin"></i></a>
+                {% endif %}
+                {% if user.telegram %}
+                <a href="https://t.me/{{ user.telegram }}" target="_blank"><i class="fab fa-telegram"></i></a>
+                {% endif %}
+                {% if user.email %}
+                <a href="mailto:{{ user.email }}"><i class="fas fa-envelope"></i></a>
+                {% endif %}
+            </div>
         </div>
     </footer>
 
     <script src="{% static 'js/scripts.js' %}"></script>
+
+    <style>
+        .no-data-message, .no-data-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .no-data-message i, .no-data-section i {
+            font-size: 3rem;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .no-data-message h4, .no-data-section h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .no-data-message p, .no-data-section p {
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .contact-card-link.no-data {
+            opacity: 0.6;
+        }
+
+        .contact-card-link.no-data .contact-details p {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .social-media-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .social-title {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .social-media-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .social-media-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #495057;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .social-media-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            color: #3498db;
+        }
+
+        .footer-social {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .footer-social a {
+            color: #6c757d;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            color: #3498db;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            transform: translateY(-2px);
+        }
+    </style>
 </body>
 </html>

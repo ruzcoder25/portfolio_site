@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from account.models import CustomUser
+
 
 class Skill(models.Model):
     """
@@ -29,6 +31,7 @@ class Skill(models.Model):
         default=timezone.now,
         help_text="Ko‘nikma yaratilgan sana va vaqt."
     )
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
         db_table = 'skill'

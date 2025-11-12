@@ -61,4 +61,4 @@ def update_profile(request):
 def logout_user(request):
     logout(request)
     messages.success(request, "Siz tizimdan chiqdingiz")
-    return redirect('login_admin')
+    return redirect('home')
