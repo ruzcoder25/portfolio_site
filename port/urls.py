@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # user views
-    path('user/', include('port_view.urls')),
+    path('', include('port_view.urls')),
     # admin
     path('accounts/', include('account.urls')),
     path('education/', include('education.urls')),
