@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: portfolio
+    env: python
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn port.wsgi:application"
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
