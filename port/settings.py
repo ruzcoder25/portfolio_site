@@ -269,12 +269,16 @@ WSGI_APPLICATION = 'port.wsgi.application'
 #     DATABASE
 # =====================================
 
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=config('DATABASE_URL', default='sqlite:///db.sqlite3'),
+#         conn_max_age=600,
+#         ssl_require=True
+#     )
+# }
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL', default='sqlite:///db.sqlite3'),
-        conn_max_age=600,
-        ssl_require=True
-    )
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
 }
 
 
@@ -317,7 +321,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -358,5 +362,5 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_TRUSTED_ORIGINS = [
     'https://*.onrender.com',
-    'https://yourdomain.uz',
+    'https://ruzcoder.uz',
 ]
