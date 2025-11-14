@@ -10,6 +10,10 @@
 # https://docs.djangoproject.com/en/5.2/ref/settings/
 # """
 from decouple import config
+import os
+from pathlib import Path
+from decouple import config
+import dj_database_url
 # from pathlib import Path
 #
 # # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -84,24 +88,24 @@ from decouple import config
 # # Database
 # # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 #
-# # DATABASES = {
-# #     'default': {
-# #         'ENGINE': 'django.db.backends.sqlite3',
-# #         'NAME': BASE_DIR / 'db.sqlite3',
-# #     }
-# # }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 #
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
-    }
-}
-#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('DB_NAME'),
+#         'USER': config('DB_USER'),
+#         'PASSWORD': config('DB_PASSWORD'),
+#         'HOST': config('DB_HOST'),
+#         'PORT': config('DB_PORT'),
+#     }
+# }
+# #
 #
 # # Password validation
 # # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -180,10 +184,7 @@ Django settings for port project.
 Deploy-ready configuration for Render.com
 """
 
-import os
-from pathlib import Path
-from decouple import config
-import dj_database_url
+
 
 # =====================================
 #     PATHLAR VA ASOSIY SOZLAMALAR
@@ -281,6 +282,12 @@ WSGI_APPLICATION = 'port.wsgi.application'
 #     'default': dj_database_url.config(default=config('DATABASE_URL'))
 # }
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # =====================================
 #     PAROL POLITIKASI
