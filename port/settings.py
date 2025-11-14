@@ -9,7 +9,7 @@
 # For the full list of settings and their values, see
 # https://docs.djangoproject.com/en/5.2/ref/settings/
 # """
-# from decouple import config
+from decouple import config
 # from pathlib import Path
 #
 # # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -91,16 +91,16 @@
 # #     }
 # # }
 #
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('DB_NAME'),
-#         'USER': config('DB_USER'),
-#         'PASSWORD': config('DB_PASSWORD'),
-#         'HOST': config('DB_HOST'),
-#         'PORT': config('DB_PORT'),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
+    }
+}
 #
 #
 # # Password validation
@@ -277,9 +277,9 @@ WSGI_APPLICATION = 'port.wsgi.application'
 #     )
 # }
 
-DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL'))
-}
+# DATABASES = {
+#     'default': dj_database_url.config(default=config('DATABASE_URL'))
+# }
 
 
 # =====================================

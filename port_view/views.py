@@ -1,5 +1,6 @@
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+# from django.contrib.auth.decorators import login_required
+# from django.contrib import messages
 from account.models import CustomUser
 from education.models import Education
 from language.models import Language
@@ -10,20 +11,27 @@ from projects.models import Project
 def home(request):
     """
     Portfolio asosiy sahifasi
-    Faqat ma'lumotlar mavjud bo'lgandagina ko'rsatadi
+    User mavjud bo'lmasa ham ishlaydi
     """
-    # Birinchi foydalanuvchini olish (yoki request.user ni ishlatish mumkin)
-    try:
+    # Agar user login qilgan bo'lsa, uning ma'lumotlarini ko'rsatish
+    if request.user.is_authenticated:
+        user = request.user
+    else:
+        # Login qilmagan holat uchun birinchi userni olish
         user = CustomUser.objects.first()
-        if not user:
-            # Agar foydalanuvchi bo'lmasa, xato sahifasini ko'rsatish
-            return render(request, 'error.html', {
-                'error_message': 'Foydalanuvchi topilmadi'
-            })
-    except CustomUser.DoesNotExist:
-        return render(request, 'error.html', {
-            'error_message': 'Foydalanuvchi topilmadi'
-        })
+
+    # Agar umuman user yo'q bo'lsa, bo'sh context yuborish
+    if not user:
+        context = {
+            'user': None,
+            'educations': None,
+            'languages': None,
+            'skill_categories': None,
+            'real_projects': None,
+            'practice_projects': None,
+            'has_education_or_languages': False,
+        }
+        return render(request, 'base.html', context)
 
     # Education - faqat mavjud bo'lsagina
     educations = Education.objects.filter(user=user).order_by('-start_year')
@@ -74,27 +82,26 @@ def home(request):
 
     return render(request, 'base.html', context)
 
-
-@login_required
-def dashboard_view(request):
-    """
-    Dashboard - faqat login qilgan foydalanuvchilar uchun
-    """
-    user = request.user
-
-    # Statistikalar
-    stats = {
-        'total_education': Education.objects.filter(user=user).count(),
-        'total_languages': Language.objects.filter(user=user).count(),
-        'total_skills': Skill.objects.count(),
-        'total_projects': Project.objects.filter(user=user).count(),
-        'real_projects': Project.objects.filter(user=user, project_type='real').count(),
-        'practice_projects': Project.objects.filter(user=user, project_type='practice').count(),
-    }
-
-    context = {
-        'user': user,
-        'stats': stats,
-    }
-
-    return render(request, 'dashboard.html', context)
+# @login_required
+# def dashboard_view(request):
+#     """
+#     Dashboard - faqat login qilgan foydalanuvchilar uchun
+#     """
+#     user = request.user
+#
+#     # Statistikalar
+#     stats = {
+#         'total_education': Education.objects.filter(user=user).count(),
+#         'total_languages': Language.objects.filter(user=user).count(),
+#         'total_skills': Skill.objects.count(),
+#         'total_projects': Project.objects.filter(user=user).count(),
+#         'real_projects': Project.objects.filter(user=user, project_type='real').count(),
+#         'practice_projects': Project.objects.filter(user=user, project_type='practice').count(),
+#     }
+#
+#     context = {
+#         'user': user,
+#         'stats': stats,
+#     }
+#
+#     return render(request, 'dashboard.html', context)
