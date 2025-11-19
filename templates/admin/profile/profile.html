@@ -555,33 +555,65 @@
                     {% endif %}
                 </div>
 
-                <!-- Resume Download -->
-                {% if user.resume_file %}
+                <!-- Resume Download (xavfsiz) -->
                 <div class="info-card">
                     <h3><i class="fas fa-file-download"></i> Rezyume</h3>
+
+                    {% if resume_exists %}
+                    <!-- Fayl haqiqatan mavjud bo'lsa ko'rsatamiz -->
                     <div class="info-item">
                         <label><i class="fas fa-file-pdf"></i> Fayl:</label>
                         <div class="resume-section">
                             <div class="resume-info">
-                                <div class="resume-file-name text-truncate-custom" title="{{ user.resume_file.name }}">
-                                    {{ user.resume_file.name|slice:"12:30" }}{% if user.resume_file.name|length > 30 %}...{% endif %}
+                                <div class="resume-file-name text-truncate-custom" title="{{ resume_name }}">
+                                    {{ resume_name|default:"Nom topilmadi" }}
                                 </div>
                                 <div class="resume-file-size">
-                                    {{ user.resume_file.size|filesizeformat }}
+                                    {% if resume_size %}
+                                        {{ resume_size|filesizeformat }}
+                                    {% else %}
+                                        <span>O‘lchami noma'lum</span>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="resume-actions">
-                                <a href="{{ user.resume_file.url }}" download class="btn btn-success btn-sm">
+                                {% if resume_url %}
+                                <a href="{{ resume_url }}" download class="btn btn-success btn-sm">
                                     <i class="fas fa-download"></i> Yuklab olish
                                 </a>
-                                <button class="btn-copy" onclick="copyToClipboard('{{ user.resume_file.url }}')" title="Havolani nusxalash">
+                                <button class="btn-copy" onclick="copyToClipboard('{{ resume_url }}')" title="Havolani nusxalash">
                                     <i class="fas fa-link"></i>
                                 </button>
+                                {% else %}
+                                <button class="btn btn-sm" disabled title="Faylga havola yo‘q">Havola yo‘q</button>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
+
+                    {% else %}
+                    <!-- Fayl model maydonda bo‘lishi mumkin, ammo diskda yo‘q yoki umuman yo‘q -->
+                    <div class="info-item">
+                        <label><i class="fas fa-file-pdf"></i> Fayl:</label>
+                        <div class="resume-section">
+                            <div class="resume-info">
+                                <div class="resume-file-name text-truncate-custom" title="{{ resume_name|default:'Fayl mavjud emas' }}">
+                                    {{ resume_name|default:"Fayl mavjud emas" }}
+                                </div>
+                                <div class="resume-file-size">
+                                    <span>Fayl diskda topilmadi</span>
+                                </div>
+                            </div>
+                            <div class="resume-actions">
+                                <a href="{% url 'update_profile' %}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-upload"></i> Rezyumeni yuklash
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
+
             </div>
 
         </div>
@@ -617,7 +649,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Profil sahifasi yuklandi');
 
-            // Ensure images are properly loaded
             const images = document.querySelectorAll('.avatar-image');
             images.forEach(img => {
                 img.onload = function() {
