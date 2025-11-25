@@ -19,12 +19,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='changeme-in-prod')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '.onrender.com',    # Render domeni
-    'ruzcoder.uz',     # O'z domeningiz
-]
+ALLOWED_HOSTS = ['*']
+
+
 
 # =====================================
 #     INSTALLED APPS
